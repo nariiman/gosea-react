@@ -1,0 +1,73 @@
+/* .card{
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+  padding: 20px;
+  margin: 10px;
+  text-align: center;
+  max-width: 250px;
+  display: inline-block;
+}
+
+.card .cardimg{
+  max-width: 60%;
+  height: auto;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.card .cardTitle{
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  color: hsl(0, 0%, 20%);
+} */
+
+
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 200px;
+  background-image: url('Shorely.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  max-width: 350px;
+
+}
+
+/* Hover Effect */
+.card::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease-in-out;
+}
+
+.card:hover::before {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.card span {
+  position: relative;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  z-index: 1;
+  transition: transform 0.3s ease-in-out, font-size 0.3s ease-in-out;
+}
+
+/* Scale up effect on hover */
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card:hover span {
+  font-size: 24px;
+}
