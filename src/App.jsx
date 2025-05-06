@@ -2,44 +2,59 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import Home from './pages/Home.jsx';
-import Marsa from './pages/Marsa.jsx';
 import Kayaking from './pages/Kayaking.jsx';
 import LuxYacht from './pages/LuxYacht.jsx';
 import TransportationPage from './pages/Transportation';
 import Catering from './components/Catering';
-// import Catering from './components/CheckoutPage';
-import Checkout from './components/Checkout.jsx';
-
-
-
-
-
-
-// import Slideshow from './components/Slideshow.jsx'; // fix the path if needed
+import Checkout from './pages/Checkout.jsx';
+import ActivityListing from './pages/ActivityListing';
+import YachtListing from './pages/YachtListing';
+import YachtBookingForm from './components/YachtBookingForm';
+import ActivityBookingForm from './components/ActivityBookingForm';
+import DestinationPage from './pages/DestinationPage';
+import GoToTop from './components/GoToTop.jsx';
+import Payment from './pages/Payment.jsx';
+import Confirmation from './pages/Confirmation.jsx';
+import SignUp from './pages/SignUp.jsx';
+import SignIn from './pages/SignIn';
+import Services from './pages/Services.jsx';
+import About from './pages/About.jsx';
+import Contact from './pages/Contact.jsx';
 
 
 function App() {
   return (
     <>
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/marsa" element={<Marsa />} />
-        <Route path="/kayaking" element={<Kayaking />} />
-        <Route path="/luxury-yacht" element={<LuxYacht />} />
-        <Route path="/transportation" element={<TransportationPage />} />
-        <Route path="/catering" element={<Catering />} />
-        <Route path="/checkout" element={<Checkout />} />
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/destinations/:id" element={<DestinationPage />} />
+          <Route path="/destinations/:id/activities" element={<ActivityListing />} />
+          <Route path="/destinations/:id/yachts" element={<YachtListing />} />
+          <Route path="/kayaking" element={<Kayaking />} />
+          <Route path="/luxury-yacht" element={<LuxYacht />} />
+          <Route path="/transportation" element={<TransportationPage />} />
+          <Route path="/catering/:id" element={<Catering />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/yachts/:id" element={<YachtBookingForm />} />
+          <Route path="/activities/:id" element={<ActivityBookingForm />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
 
 
-
-        {/* Add more routes here */}
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+        </Routes>
+        <GoToTop />
+        <Footer />
+      </BrowserRouter>
     </>
   );
 }
 
-export default App
+export default App;

@@ -1,19 +1,33 @@
 /* ===================== */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+
 /* ✅ General Styling    */
 /* ===================== */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'DM Sans', sans-serif;
     margin: 0;
+    font-weight: 500;
     padding: 0;
     text-align: center;
     background-color: #f8f9fa;
     color: #333;
   }
-  
+  h1{
+    font-weight: 500;
+    font-display: swap;
+    font-size: 50px;
+    margin:0;
+  }
+  h5{
+    font-weight: 500;
+    font-display: swap;
+    font-size: 20px;
+    margin: 10px;
+  }
   /* ===================== */
   /* ✅ Header             */
   /* ===================== */
-  .mainHeader {
+  /* .mainHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -42,8 +56,87 @@ body {
   
   .mainHeader nav ul li a:hover {
     color: blue;
+  } */
+  
+  .main-header {
+    background-color: #fff;
+    padding: 20px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
   
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo a {
+    text-decoration: none;
+    color: #377DFF;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  
+  nav ul li a:hover {
+    color: #377DFF;
+  }
+  
+  .auth-buttons {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+  
+  .btn-primary {
+    background-color: #377DFF;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2563EB;
+  }
+  
+  .btn-outline {
+    background-color: white;
+    color: #377DFF;
+    border: 1px solid #377DFF;
+  }
+  
+  .btn-outline:hover {
+    background-color: #F0F4FF;
+  }
+  
+
+
   /* ===================== */
   /* ✅ Section Headings   */
   /* ===================== */
@@ -289,7 +382,7 @@ hr {
   text-align: center;
 }
 
-.search-box {
+/* .search-box {
   background: white;
   padding: 20px;
   border-radius: 10px;
@@ -301,7 +394,7 @@ hr {
   width: 90%;
   max-width: 400px;
   margin-top: 20px;
-}
+} */
 
 .tabs {
   display: flex;
@@ -584,7 +677,7 @@ hr {
   background-color: #f8fcff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', sans-serif;
+  /* font-family: 'Segoe UI', sans-serif; */
 }
 
 .transportation-page h2 {
@@ -762,40 +855,56 @@ textarea {
   background-color: #0600bd;
 }
 /* --------------------------------checkoutpage */
-
 .checkout-container {
-  padding: 2rem;
-  text-align: center;
+  padding: 40px;
+  background: white;
+  max-width: 600px;
+  margin: 50px auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.checkout-summary {
-  margin: 2rem auto;
-  padding: 1.5rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  width: 300px;
-  background-color: #f9f9f9;
+.checkout-container h2 {
+  color: #002244;
+  margin-bottom: 20px;
 }
 
-.checkout-summary img {
+.checkout-container ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.checkout-container li {
+  margin: 10px 0;
+}
+
+.total-price {
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.checkout-btn {
+  background: #002244;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.checkout-btn:hover {
+  background: #004080;
+}
+
+.credit-form input {
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
   width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
-
-.checkout-summary h3 {
-  margin: 0.5rem 0;
-}
-
-.checkout-notes {
-  margin-top: 1rem;
-  text-align: left;
-  font-size: 0.95rem;
-}
-
-
 
 
 /* -----------/? */
@@ -819,3 +928,329 @@ textarea {
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+
+/* ////////////////////payment */
+
+.payment-options {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.payment-options button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.payment-options button.active {
+  background: #002244;
+  color: white;
+  border-color: #002244;
+}
+
+.credit-form input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* ----------------viewbuttons */
+.split-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  margin: 4rem 0;
+}
+
+.split-section.reverse {
+  flex-direction: row-reverse;
+  
+}
+
+.split-section .image.full-bg {
+  flex: 1;
+  min-height: 400px;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  
+}
+
+.split-section .text {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.split-section .text h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.split-section .text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-primary {
+  background: #002244;
+  color: white;
+}
+
+.btn-secondary {
+  background: #0062ff;
+  color: white;
+  border: 1px solid #ccc;
+}
+
+.btn-primary:hover {
+  background: #007bff;
+}
+
+.btn-secondary:hover {
+  background: #007bff;
+}
+
+/* Bubble Section */
+.bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  max-width: 1000px;
+}
+
+.bubble-tag {
+  background: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+/* signinup */
+/* auth.css */
+
+.auth-container {
+  max-width: 400px;
+  margin: 100px auto;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.auth-container h2 {
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-container input {
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.2s ease;
+}
+
+.auth-container input:focus {
+  border-color: #0077ff;
+  outline: none;
+}
+
+.auth-container button {
+  padding: 12px;
+  background-color: #0077ff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.auth-container button:hover {
+  background-color: #005fcc;
+}
+
+.auth-container .switch-link {
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.auth-container .switch-link a {
+  color: #0077ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-container .switch-link a:hover {
+  text-decoration: underline;
+}
+
+
+
+/* ---------------------------navpages */
+
+
+.page-container {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 44px;
+  color: #377dff;
+  margin-bottom: 10px;
+}
+
+.page-subtitle {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.service-list, .contact-info {
+  text-align: left;
+  margin: 0 auto 40px;
+  max-width: 700px;
+}
+
+.service-item {
+  margin-bottom: 30px;
+}
+
+.service-item h3 {
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.service-item p {
+  color: #555;
+  line-height: 1.6;
+}
+
+.about-text {
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.contact-form button {
+  padding: 12px 20px;
+  background-color: #377dff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.contact-form button:hover {
+  background-color: #255ccc;
+}
+
+/* reactselect */
+.react-select__control {
+  border-radius: 8px;
+  border-color: #ddd;
+  box-shadow: none;
+}
+
+.react-select__menu {
+  border-radius: 8px;
+}
+
+.react-select__option--is-selected {
+  background-color: #4f9aff;
+  color: white;
+}
+
+.react-select__option--is-focused {
+  background-color: #f0f7ff;
+}
+
+/* activityreceipt */
+.activity-receipt {
+  margin-top: 15px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.activity-receipt h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.activity-receipt ul {
+  list-style-type: "🎯 ";
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.activity-receipt ul li {
+  padding: 4px 0;
+  color: #555;
+}
+
+.activity-receipt p {
+  font-weight: bold;
+  color: #222;
+}
+

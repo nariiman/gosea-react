@@ -1,8 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Transportation from './Transportation';
 import CateringBtn from './CateringBtn';
+import Select from 'react-select';
 
-const YachtBookingForm = ({ name, hourlyRate, dailyRate, startTimes }) => {
+const YachtBookingForm = () => {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
+  const {
+    name = '',
+    hourlyRate = 0,
+    dailyRate = 0,
+    startTimes = [],
+    destinationId = null,
+  } = state || {};
+
+  if (!state || !name || !hourlyRate || !destinationId) {
+    return <p>🚫 Missing yacht or destination details. Please go back and select a yacht again.</p>;
+  }
+
   const [bookingType, setBookingType] = useState('hourly');
   const [hourlyDate, setHourlyDate] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -11,42 +28,90 @@ const YachtBookingForm = ({ name, hourlyRate, dailyRate, startTimes }) => {
   const [hours, setHours] = useState('');
   const [guests, setGuests] = useState('');
   const [price, setPrice] = useState(null);
-
   const [dateError, setDateError] = useState('');
 
+  const [activities, setActivities] = useState([]);
+  const [selectedActivities, setSelectedActivities] = useState([]);
+  const [loadingActivities, setLoadingActivities] = useState(false);
+  const [activitiesError, setActivitiesError] = useState('');
+
+  // Fetch activities
   useEffect(() => {
-    // 🔸 Reset previous error
+    const fetchActivities = async () => {
+      setLoadingActivities(true);
+      try {
+        const res = await fetch(`http://localhost:3000/activities?destinationId=${destinationId}`);
+        const data = await res.json();
+        // Convert pricePerHour to number here immediately
+        const formatted = data.map(a => ({
+          ...a,
+          pricePerHour: Number(a.pricePerHour),
+        }));
+        setActivities(formatted);
+      } catch (err) {
+        setActivitiesError('Failed to fetch activities.');
+      } finally {
+        setLoadingActivities(false);
+      }
+    };
+
+    fetchActivities();
+  }, [destinationId]);
+
+  // Calculate total price
+  useEffect(() => {
     setDateError('');
-  
     const guestCount = guests ? parseInt(guests) : 0;
-  
-    // 🔸 Validate multi-day date range
+
     if (bookingType === 'multi-day' && startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
-  
       if (end < start) {
         setDateError('🚫 End date cannot be before start date.');
         setPrice(null);
         return;
       }
     }
-  
-    // 💰 Price Calculation Logic
+
+    let yachtPrice = 0;
+
     if (bookingType === 'hourly' && hours && guestCount > 0) {
-      const durationCost = parseInt(hours) * hourlyRate;
-      setPrice(durationCost * guestCount);
+      yachtPrice = parseInt(hours) * hourlyRate * guestCount;
     } else if (bookingType === 'multi-day' && startDate && endDate && guestCount > 0) {
       const diffDays = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
       if (diffDays > 0) {
-        const total = diffDays * dailyRate * guestCount;
-        setPrice(total);
+        yachtPrice = diffDays * dailyRate * guestCount;
       }
-    } else {
-      setPrice(null);
     }
-  }, [bookingType, hours, startDate, endDate, guests]);
-  
+
+    const activitiesTotal = selectedActivities.reduce((acc, act) => acc + act.price, 0);
+    setPrice(yachtPrice + activitiesTotal);
+  }, [bookingType, hours, startDate, endDate, guests, selectedActivities]);
+
+  const handleBooking = () => {
+    const bookingData = {
+      bookingType,
+      hourlyDate,
+      startDate,
+      endDate,
+      startTime,
+      hours,
+      guests,
+      price,
+      activityIds: selectedActivities.map((a) => a.id),
+    };
+
+    console.log('Booking:', bookingData);
+    alert('Booking submitted!');
+  };
+
+  const activityOptions = activities.map(activity => ({
+    value: activity.id,
+    label: `${activity.name} (EGP ${activity.pricePerHour})`,
+    id: activity.id,
+    name: activity.name,
+    price: activity.pricePerHour,
+  }));
 
   return (
     <div className="details">
@@ -87,15 +152,10 @@ const YachtBookingForm = ({ name, hourlyRate, dailyRate, startTimes }) => {
         <>
           <label>Start Date:</label>
           <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-
           <label>End Date:</label>
           <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-          {dateError && (
-  <p className="error-message">{dateError}</p>
-)}
-
+          {dateError && <p className="error-message">{dateError}</p>}
         </>
-        
       )}
 
       <label>Guest Count:</label>
@@ -108,18 +168,49 @@ const YachtBookingForm = ({ name, hourlyRate, dailyRate, startTimes }) => {
         placeholder="Enter number of guests"
       />
 
-{price && (
-  <p className="price-display">
-    Estimated Price for {guests} guest{guests > 1 ? 's' : ''}:{' '}
-    <strong>EGP {price}</strong>
-  </p>
-)}
+      <label>Select Activities (with price):</label>
+      {loadingActivities ? (
+        <p>Loading activities...</p>
+      ) : activitiesError ? (
+        <p style={{ color: 'red' }}>{activitiesError}</p>
+      ) : (
+        <Select
+          isMulti
+          className="activity-select"
+          options={activityOptions}
+          value={selectedActivities}
+          onChange={(selectedOptions) => setSelectedActivities(selectedOptions || [])}
+        />
+      )}
 
+      {selectedActivities.length > 0 && (
+        <div className="activity-receipt">
+          <h4>Selected Activities:</h4>
+          <ul>
+            {selectedActivities.map((activity, index) => (
+              <li key={index}>
+                🎯 {activity.name} — <strong>EGP {activity.price}</strong>
+              </li>
+            ))}
+          </ul>
+          <p><strong>Activities Total:</strong> EGP {
+            selectedActivities.reduce((acc, act) => acc + act.price, 0)
+          }</p>
+        </div>
+      )}
 
-      <CateringBtn />
+      {price !== null && (
+        <p className="price-display">
+          Estimated Total Price: <strong>EGP {price}</strong>
+        </p>
+      )}
+
+      <CateringBtn destinationId={destinationId} />
       <Transportation />
 
-      <button className="checkout-btn">Reserve Yacht</button>
+      <button className="checkout-btn" onClick={handleBooking}>
+        Reserve Yacht
+      </button>
     </div>
   );
 };
