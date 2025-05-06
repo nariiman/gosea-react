@@ -35,10 +35,8 @@ const Hero = () => {
         ))}
       </div>
       <div className="overlay">
-        <h1>The best Yacht and Activities experience</h1>
-        <div className="search-box">
-          {/* Search functionality goes here */}
-        </div>
+        <h5>Your Seaside Escape</h5>
+        <h1>Serenity, Awaits.</h1>
       </div>
     </section>
   );

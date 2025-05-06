@@ -1,55 +1,41 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/ss.css';
 
-import kay from '../assets/kay.jpg';
-// import bbqImg from '../assets/bbq.jpg';
-// import fingerfoodImg from '../assets/fingerfood.jpg';
-// import sushiImg from '../assets/sushi.jpg';
-// import orientalImg from '../assets/oriental.jpg';
-
-const cuisineOptions = [
-  {
-    name: 'Seafood',
-    price: 1200,
-    img: kay,
-    description: 'Grilled shrimp, lobster bites, calamari, seafood rice.'
-  },
-  {
-    name: 'BBQ',
-    price: 1000,
-    img: kay,
-    description: 'BBQ chicken wings, beef skewers, grilled veggies, sauces.'
-  },
-  {
-    name: 'Finger Food',
-    price: 700,
-    img: kay,
-    description: 'Spring rolls, mini sliders, puff pastries, mixed dips.'
-  },
-  {
-    name: 'Sushi',
-    price: 1300,
-    img: kay,
-    description: 'Nigiri, Maki rolls, Sashimi, soy sauce, pickled ginger.'
-  },
-  {
-    name: 'Oriental',
-    price: 900,
-    img: kay,
-    description: 'Kofta, kebab, vine leaves, sambousak, tahini.'
-  }
-];
-
 const Catering = () => {
+  const { id } = useParams(); // Destination ID
+  const [options, setOptions] = useState([]);
   const [selectedMenus, setSelectedMenus] = useState([]);
   const [specialNotes, setSpecialNotes] = useState('');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCatering = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/catering/destination/${id}`);
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setOptions(data);
+        } else {
+          console.warn("Expected array, received:", data);
+          setOptions([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch catering options:', err);
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCatering();
+  }, [id]);
 
   const toggleMenu = (menu) => {
     setSelectedMenus((prev) =>
-      prev.find((m) => m.name === menu.name)
-        ? prev.filter((m) => m.name !== menu.name)
+      prev.find((m) => m.id === menu.id)
+        ? prev.filter((m) => m.id !== menu.id)
         : [...prev, menu]
     );
   };
@@ -70,25 +56,29 @@ const Catering = () => {
       <h2>🍽️ Catering Options</h2>
       <p>Select one or more preferred menus for your trip:</p>
 
-      <div className="catering-grid">
-        {cuisineOptions.map((item) => {
-          const isSelected = selectedMenus.some((m) => m.name === item.name);
-          return (
-            <div
-              key={item.name}
-              className={`menu-card ${isSelected ? 'selected' : ''}`}
-              onClick={() => toggleMenu(item)}
-            >
-              <img src={item.img} alt={item.name} />
-              <h3>{item.name}</h3>
-              <p><strong>EGP {item.price}</strong> per person</p>
-              <p className="menu-description">{item.description}</p>
-            </div>
-          );
-        })}
-      </div>
-
-      
+      {loading ? (
+        <p>Loading...</p>
+      ) : Array.isArray(options) && options.length > 0 ? (
+        <div className="catering-grid">
+          {options.map((item) => {
+            const isSelected = selectedMenus.some((m) => m.id === item.id);
+            return (
+              <div
+                key={item.id}
+                className={`menu-card ${isSelected ? 'selected' : ''}`}
+                onClick={() => toggleMenu(item)}
+              >
+                <img src={item.pics || 'fallback.png'} alt={item.name} />
+                <h3>{item.name}</h3>
+                <p><strong>EGP {item.pricePerPerson}</strong> per person</p>
+                <p className="menu-description">{item.description}</p>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p>No catering options available for this destination.</p>
+      )}
 
       <form onSubmit={(e) => {
         e.preventDefault();

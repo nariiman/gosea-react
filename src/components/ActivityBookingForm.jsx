@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Transportation from './Transportation';
 
-const ActivityBookingForm = ({ name, basePrice, durationUnit = 15, durations, timeSlots }) => {
+const ActivityBookingForm = () => {
+  const { state } = useLocation();
+  const {
+    name = 'Activity',
+    basePrice = 0,
+    durationUnit = 15,
+    durations = [],
+    timeSlots = {},
+  } = state || {};
+
   const [preferredTime, setPreferredTime] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [duration, setDuration] = useState('');
@@ -9,10 +19,12 @@ const ActivityBookingForm = ({ name, basePrice, durationUnit = 15, durations, ti
   const [price, setPrice] = useState(null);
 
   useEffect(() => {
-    if (duration && riders) {
-      const durationCost = (parseInt(duration) / durationUnit) * basePrice;
-      const riderCount = riders === '6+' ? 6 : parseInt(riders);
-      setPrice(durationCost * riderCount);
+    const validDuration = parseInt(duration);
+    const validRiders = riders === '6+' ? 6 : parseInt(riders);
+
+    if (!isNaN(validDuration) && !isNaN(validRiders)) {
+      const durationCost = (validDuration / durationUnit) * basePrice;
+      setPrice(durationCost * validRiders);
     } else {
       setPrice(null);
     }
@@ -34,7 +46,7 @@ const ActivityBookingForm = ({ name, basePrice, durationUnit = 15, durations, ti
         ))}
       </select>
 
-      {preferredTime && (
+      {preferredTime && timeSlots[preferredTime] && (
         <select onChange={(e) => setSelectedTime(e.target.value)} value={selectedTime}>
           <option value="">Choose Time Slot</option>
           {timeSlots[preferredTime].map((time, index) => (
@@ -60,15 +72,13 @@ const ActivityBookingForm = ({ name, basePrice, durationUnit = 15, durations, ti
         <option value="6+">6+</option>
       </select>
 
-      {price && (
+      {price !== null && (
         <p className="price-display">
-          Estimated Price for {riders} rider{riders > 1 ? 's' : ''}:{' '}
-          <strong>EGP {price}</strong>
+          Estimated Price for {riders} rider{riders !== '1' ? 's' : ''}: <strong>EGP {price}</strong>
         </p>
       )}
 
       <Transportation />
-
       <button className="checkout-btn">Book Now</button>
     </div>
   );

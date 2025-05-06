@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../styles/ss.css';
 
 const fetchDestinations = async () => {
@@ -8,7 +9,8 @@ const fetchDestinations = async () => {
   return data;
 };
 
-const Destinations = () => {
+const DestinationList = () => {
+  const navigate = useNavigate();
   const { data, isLoading, error } = useQuery({
     queryKey: ['destinations'],
     queryFn: fetchDestinations,
@@ -22,13 +24,19 @@ const Destinations = () => {
 
   return (
     <section className="destinations">
-      {data.map((destination, index) => (
-        <a href={destination.imageUrl ?? '#'} key={index} className="card">
+      {data.map((destination) => (
+        <div
+          key={destination.id}
+          className="card"
+          onClick={() => navigate(`/destinations/${destination.id}`)}
+          style={{ cursor: 'pointer' }}
+        >
+          <img src={destination.imageUrl || 'fallback.png'} alt={destination.name} />
           <span>{destination.name}</span>
-        </a>
+        </div>
       ))}
     </section>
   );
 };
 
-export default Destinations;
+export default DestinationList;
