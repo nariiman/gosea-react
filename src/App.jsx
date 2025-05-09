@@ -20,6 +20,8 @@ import SignIn from './pages/SignIn';
 import Services from './pages/Services.jsx';
 import About from './pages/About.jsx';
 import Contact from './pages/Contact.jsx';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 
 function App() {
@@ -27,6 +29,15 @@ function App() {
     <>
       <BrowserRouter>
         <Header />
+        <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/destinations/:id" element={<DestinationPage />} />
@@ -47,7 +58,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
-
+          
 
         </Routes>
         <GoToTop />
