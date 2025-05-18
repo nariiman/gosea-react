@@ -26,6 +26,7 @@ const ActivityBookingForm = () => {
   const [duration, setDuration] = useState('');
   const [riders, setRiders] = useState('');
   const [price, setPrice] = useState(null);
+  const [formOpen, setFormOpen] = useState(false);
   const [activeImgIndex, setActiveImgIndex] = useState(null);
 
   const handleKeyDown = useCallback((e) => {
@@ -59,7 +60,7 @@ const ActivityBookingForm = () => {
 
   return (
     <div className="booking-wrapper">
-      {/* Hero */}
+      {/* Hero Section */}
       <header className="booking-header">
         <img src={mainImage} alt={name} className="booking-header-img" />
         <div className="booking-header-overlay">
@@ -92,62 +93,88 @@ const ActivityBookingForm = () => {
         </div>
       )}
 
-      {/* Form */}
-      <div className="booking-content">
-        <div className="booking-form">
-          <label>Date</label>
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-
-          <label>Preferred Time</label>
-          <select value={preferredTime} onChange={(e) => setPreferredTime(e.target.value)}>
-            <option value="">Select Preferred Time</option>
-            {Object.keys(timeSlots).map((slot) => (
-              <option key={slot} value={slot}>
-                {slot.charAt(0).toUpperCase() + slot.slice(1)}
-              </option>
-            ))}
-          </select>
-
-          {preferredTime && timeSlots[preferredTime] && (
-            <>
-              <label>Time Slot</label>
-              <select value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)}>
-                <option value="">Choose Time Slot</option>
-                {timeSlots[preferredTime].map((time, index) => (
-                  <option key={index} value={time}>{time}</option>
-                ))}
-              </select>
-            </>
-          )}
-
-          <label>Duration</label>
-          <select value={duration} onChange={(e) => setDuration(e.target.value)}>
-            <option value="">Select Duration</option>
-            {durations.map((d) => (
-              <option key={d} value={d}>{d} mins</option>
-            ))}
-          </select>
-
-          <label>Number of Riders</label>
-          <select value={riders} onChange={(e) => setRiders(e.target.value)}>
-            <option value="">Number of Riders</option>
-            {[1, 2, 3, 4, 5].map(num => (
-              <option key={num} value={num}>{num}</option>
-            ))}
-            <option value="6+">6+</option>
-          </select>
-
-          {price !== null && (
-            <p className="price-display">
-              Estimated Price for {riders} rider{riders !== '1' ? 's' : ''}: <strong>EGP {price}</strong>
-            </p>
-          )}
-
-          <Transportation />
-
-          <button className="checkout-btn">Book Now</button>
+      {/* Intro Call-to-Action and Info */}
+      <section className="booking-section-intro">
+        <div className="booking-callout">
+          <h2>Ready for your adventure?</h2>
+          <p>Secure your spot and customize your ride today.</p>
+          <button className="primary-book-btn" onClick={() => setFormOpen(!formOpen)}>
+            {formOpen ? 'Hide Booking Form' : 'Start Booking →'}
+          </button>
         </div>
-      </div>
+
+      </section>
+
+      {/* Booking Form */}
+      {formOpen && (
+        <div className="booking-content">
+          <div className="booking-form">
+            <label>Date</label>
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+
+            <label>Preferred Time</label>
+            <select value={preferredTime} onChange={(e) => setPreferredTime(e.target.value)}>
+              <option value="">Select Preferred Time</option>
+              {Object.keys(timeSlots).map((slot) => (
+                <option key={slot} value={slot}>
+                  {slot.charAt(0).toUpperCase() + slot.slice(1)}
+                </option>
+              ))}
+            </select>
+
+            {preferredTime && timeSlots[preferredTime] && (
+              <>
+                <label>Time Slot</label>
+                <select value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)}>
+                  <option value="">Choose Time Slot</option>
+                  {timeSlots[preferredTime].map((time, index) => (
+                    <option key={index} value={time}>{time}</option>
+                  ))}
+                </select>
+              </>
+            )}
+
+            <label>Duration</label>
+            <select value={duration} onChange={(e) => setDuration(e.target.value)}>
+              <option value="">Select Duration</option>
+              {durations.map((d) => (
+                <option key={d} value={d}>{d} mins</option>
+              ))}
+            </select>
+
+            <label>Number of Riders</label>
+            <select value={riders} onChange={(e) => setRiders(e.target.value)}>
+              <option value="">Number of Riders</option>
+              {[1, 2, 3, 4, 5].map(num => (
+                <option key={num} value={num}>{num}</option>
+              ))}
+              <option value="6+">6+</option>
+            </select>
+
+            {price !== null && (
+              <p className="price-display">
+                Estimated Price: <strong>EGP {price}</strong>
+              </p>
+            )}
+
+            <Transportation />
+            <button className="checkout-btn">Book Now</button>
+          </div>
+        </div>
+      )}
+      <div className="booking-extras-card">
+          <h3>Cancellation Policy</h3>
+          <p>Cancellations up to 24 hours before the activity will be fully refunded. No refunds for same-day cancellations.</p>
+
+          <h3>Safety & Regulations</h3>
+          <p>All riders must wear life jackets provided. Participation under the influence of alcohol or drugs is strictly prohibited.</p>
+
+          <h3>FAQs</h3>
+          <p><strong>Q: Can children participate?</strong><br />
+          A: Yes, children above 10 years old can join with adult supervision.</p>
+          <p><strong>Q: Is equipment provided?</strong><br />
+          A: Yes, all necessary safety and riding gear is included in the price.</p>
+        </div>
     </div>
   );
 };

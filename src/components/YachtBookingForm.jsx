@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Transportation from './Transportation';
@@ -15,6 +16,9 @@ const YachtBookingForm = () => {
     startTimes = [],
     destinationId = null,
     mainImage = '/assets/Shorely.png',
+    guestCapacity = state?.guestCapacity,
+    beds = state?.beds,
+    mainDescription = '',
     gallery = [
       '/assets/kay.jpg',
       '/assets/kaya.jpg',
@@ -37,7 +41,6 @@ const YachtBookingForm = () => {
   const [guests, setGuests] = useState('');
   const [price, setPrice] = useState(null);
   const [dateError, setDateError] = useState('');
-
   const [activities, setActivities] = useState([]);
   const [selectedActivities, setSelectedActivities] = useState([]);
   const [loadingActivities, setLoadingActivities] = useState(false);
@@ -138,7 +141,6 @@ const YachtBookingForm = () => {
 
   return (
     <div className="booking-wrapper">
-      {/* Hero */}
       <header className="booking-header">
         <img src={mainImage} alt={name} className="booking-header-img" />
         <div className="booking-header-overlay">
@@ -146,7 +148,6 @@ const YachtBookingForm = () => {
         </div>
       </header>
 
-      {/* Gallery */}
       <section className="booking-gallery">
         {gallery.map((img, idx) => (
           <img
@@ -159,7 +160,6 @@ const YachtBookingForm = () => {
         ))}
       </section>
 
-      {/* Lightbox Viewer */}
       {activeImgIndex !== null && (
         <div className="lightbox-overlay" onClick={() => setActiveImgIndex(null)}>
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
@@ -171,7 +171,21 @@ const YachtBookingForm = () => {
         </div>
       )}
 
-      {/* Form + Summary */}
+      <section className="yacht-details-card">
+        <div className="yacht-details-content">
+          <div className="yacht-main-text">
+            <h2>{name}</h2>
+            {mainDescription && <p>{mainDescription}</p>}
+            <ul className="yacht-specs-compact">
+              <li><i>🧍</i> {guestCapacity} Guests</li>
+              <li><i>🛏️</i> {beds} Beds</li>
+              <li><i>⏱️</i> EGP {hourlyRate}/hour</li>
+              <li><i>📅</i> EGP {dailyRate}/day</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <div className="booking-content">
         <div className="booking-form">
           <label>Booking Type</label>
@@ -244,32 +258,55 @@ const YachtBookingForm = () => {
           <CateringBtn destinationId={destinationId} />
           <Transportation />
 
-          <button className="checkout-btn" onClick={handleBooking}>
-            Reserve Yacht
-          </button>
+          <button
+  className="checkout-btn"
+  disabled={!price || price <= 0}
+  onClick={() => navigate('/checkout', {
+    state: {
+      yachtName: name,
+      mainImage,
+      guestCapacity,
+      beds,
+      bookingType,
+      hourlyDate,
+      startDate,
+      endDate,
+      startTime,
+      hours,
+      guests,
+      price,
+      selectedActivities,
+    }
+  })}
+>
+  Reserve Yacht
+</button>
+
         </div>
 
-        <div className="booking-summary">
-          <h3>Summary</h3>
-          {selectedActivities.length > 0 && (
-            <>
-              <ul>
-                {selectedActivities.map((a, i) => (
-                  <li key={i}>{a.name} — EGP {a.price}</li>
-                ))}
-              </ul>
-              <p><strong>Activities Total:</strong> EGP {
-                selectedActivities.reduce((acc, act) => acc + act.price, 0)
-              }</p>
-            </>
-          )}
+        {price !== null && price > 0 && (
+  <div className="booking-summary">
+    <h3>Summary</h3>
 
-          {price !== null && (
-            <p className="price-display">
-              <strong>Total Estimate:</strong> EGP {price}
-            </p>
-          )}
-        </div>
+    {selectedActivities.length > 0 && (
+      <>
+        <ul>
+          {selectedActivities.map((a, i) => (
+            <li key={i}>{a.name} — EGP {a.price}</li>
+          ))}
+        </ul>
+        <p><strong>Activities Total:</strong> EGP {
+          selectedActivities.reduce((acc, act) => acc + act.price, 0)
+        }</p>
+      </>
+    )}
+
+    <p className="price-display">
+      <strong>Total Estimate:</strong> EGP {price}
+    </p>
+  </div>
+)}
+
       </div>
     </div>
   );

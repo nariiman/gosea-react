@@ -24,6 +24,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 
+
+
 function App() {
   return (
     <>
@@ -64,6 +66,7 @@ function App() {
         <GoToTop />
         <Footer />
       </BrowserRouter>
+      
     </>
   );
 }

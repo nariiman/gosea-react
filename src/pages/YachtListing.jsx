@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import { useParams, useNavigate } from 'react-router-dom';
 import Breadcrumbs from "../components/Breadcrumbs";
 
@@ -7,6 +7,8 @@ const YachtListing = () => {
   const navigate = useNavigate();
   const [yachts, setYachts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [typeFilter, setTypeFilter] = useState('');
+  const [maxPriceFilter, setMaxPriceFilter] = useState('');
 
   useEffect(() => {
     const fetchYachts = async () => {
@@ -45,7 +47,9 @@ const YachtListing = () => {
           '/assets/kayaking.jpg',
           '/assets/Kayaking.png',
           '/assets/JetSki.png',
-        ]
+        ],
+        guestCapacity: yacht.guest_capacity,
+        beds: yacht.beds
       }
     });
   };
@@ -55,18 +59,41 @@ const YachtListing = () => {
     return price % 1 === 0 ? price.toFixed(0) : price.toFixed(2);
   };
 
+  const filteredYachts = yachts.filter((yacht) => {
+    const matchesType = typeFilter ? yacht.yachtType?.toLowerCase() === typeFilter.toLowerCase() : true;
+    const matchesPrice = maxPriceFilter ? yacht.pricePerHour <= parseFloat(maxPriceFilter) : true;
+    return matchesType && matchesPrice;
+  });
+
   return (
     <div className="yachts-page">
       <Breadcrumbs />
       <h2 className="yachts-title">Explore Yachts</h2>
 
+      {/* 🔍 Filter UI */}
+      <div className="filter-bar">
+        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+          <option value="">All Types</option>
+          <option value="Luxury">Luxury</option>
+          <option value="Adventure">Adventure</option>
+          <option value="Fishing">Fishing</option>
+          <option value="Family">Family</option>
+        </select>
+        <input
+          type="number"
+          placeholder="Max Price (EGP)"
+          value={maxPriceFilter}
+          onChange={(e) => setMaxPriceFilter(e.target.value)}
+        />
+      </div>
+
       {loading ? (
         <p>Loading...</p>
-      ) : yachts.length === 0 ? (
-        <p>No yachts found.</p>
+      ) : filteredYachts.length === 0 ? (
+        <p>No yachts match your filters.</p>
       ) : (
         <div className="yachts-grid">
-          {yachts.map((item) => (
+          {filteredYachts.map((item) => (
             <div
               key={item.id}
               className="yacht-card"

@@ -6,6 +6,9 @@ const ActivityListing = () => {
   const { id } = useParams();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [typeFilter, setTypeFilter] = useState('');
+  const [maxPriceFilter, setMaxPriceFilter] = useState('');
+  const [types, setTypes] = useState([]);
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -32,7 +35,19 @@ const ActivityListing = () => {
       }
     };
 
+    const fetchTypes = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/activities/types/${id}`);
+        const data = await res.json();
+        setTypes(data);
+      } catch (err) {
+        console.error('Failed to fetch types:', err);
+        setTypes([]);
+      }
+    };
+
     fetchActivities();
+    fetchTypes();
   }, [id]);
 
   const formatPrice = (price) => {
@@ -40,18 +55,43 @@ const ActivityListing = () => {
     return price % 1 === 0 ? price.toFixed(0) : price.toFixed(2);
   };
 
+  const filteredActivities = activities.filter((activity) => {
+    const normalizedType = (activity.activity_type || '').trim().toLowerCase();
+    const normalizedFilter = typeFilter.trim().toLowerCase();
+
+    const matchesType = typeFilter ? normalizedType === normalizedFilter : true;
+    const matchesPrice = maxPriceFilter ? activity.pricePerHour <= parseFloat(maxPriceFilter) : true;
+    return matchesType && matchesPrice;
+  });
+
   return (
     <div className="activities-page">
       <Breadcrumbs />
       <h2 className="activities-title">Explore Activities</h2>
 
+      {/* 🔍 Filter UI */}
+      <div className="filter-bar">
+        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+          <option value="">All Types</option>
+          {types.map((type, index) => (
+            <option key={index} value={type}>{type}</option>
+          ))}
+        </select>
+        <input
+          type="number"
+          placeholder="Max Price (EGP)"
+          value={maxPriceFilter}
+          onChange={(e) => setMaxPriceFilter(e.target.value)}
+        />
+      </div>
+
       {loading ? (
         <p>Loading...</p>
-      ) : activities.length === 0 ? (
+      ) : filteredActivities.length === 0 ? (
         <p>No activities found.</p>
       ) : (
         <div className="activities-grid">
-          {activities.map((item, index) => {
+          {filteredActivities.map((item, index) => {
             const priceFormatted = formatPrice(item.pricePerHour);
 
             return (
@@ -73,7 +113,8 @@ const ActivityListing = () => {
               >
                 <img src={item.imageUrl} alt={item.name} />
                 <div className="activity-card-content">
-                  <span className="activity-type">{item.activity_type || 'Activity'}</span>
+                  <span className="activity-type">{item.activity_type?.trim() || 'Activity'}</span>
+
                   <h3>{item.name}</h3>
                   <p className="activity-price">
                     {priceFormatted !== null ? (
