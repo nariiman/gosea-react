@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'; 
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
 
 const YachtListing = () => {
@@ -7,24 +7,28 @@ const YachtListing = () => {
   const navigate = useNavigate();
   const [yachts, setYachts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [typeFilter, setTypeFilter] = useState('');
-  const [maxPriceFilter, setMaxPriceFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState("");
+  const [maxPriceFilter, setMaxPriceFilter] = useState("");
 
   useEffect(() => {
     const fetchYachts = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/yachts/destination/${id}`);
+        const res = await fetch(
+          `http://localhost:3000/yachts/destination/${id}`
+        );
         const data = await res.json();
 
-        const formattedData = data.map(yacht => ({
+        const formattedData = data.map((yacht) => ({
           ...yacht,
-          pricePerHour: yacht.pricePerHour ? parseFloat(yacht.pricePerHour) : null,
-          imageUrl: yacht.pics || '/assets/Shorely.png'
+          pricePerHour: yacht.pricePerHour
+            ? parseFloat(yacht.pricePerHour)
+            : null,
+          imageUrl: yacht.pics || "/assets/Shorely.png",
         }));
 
         setYachts(formattedData);
       } catch (err) {
-        console.error('Failed to fetch yachts:', err);
+        console.error("Failed to fetch yachts:", err);
       } finally {
         setLoading(false);
       }
@@ -40,17 +44,17 @@ const YachtListing = () => {
         hourlyRate: yacht.pricePerHour,
         dailyRate: yacht.pricePerHour ? yacht.pricePerHour * 8 : 0,
         destinationId: yacht.destinationId ?? yacht.destination_id,
-        mainImage: yacht.pics || '/assets/Shorely.png',
+        mainImage: yacht.pics || "/assets/Shorely.png",
         gallery: [
-          '/assets/kay.jpg',
-          '/assets/kaya.jpg',
-          '/assets/kayaking.jpg',
-          '/assets/Kayaking.png',
-          '/assets/JetSki.png',
+          "/assets/kay.jpg",
+          "/assets/kaya.jpg",
+          "/assets/kayaking.jpg",
+          "/assets/Kayaking.png",
+          "/assets/JetSki.png",
         ],
         guestCapacity: yacht.guest_capacity,
-        beds: yacht.beds
-      }
+        beds: yacht.beds,
+      },
     });
   };
 
@@ -60,8 +64,12 @@ const YachtListing = () => {
   };
 
   const filteredYachts = yachts.filter((yacht) => {
-    const matchesType = typeFilter ? yacht.yachtType?.toLowerCase() === typeFilter.toLowerCase() : true;
-    const matchesPrice = maxPriceFilter ? yacht.pricePerHour <= parseFloat(maxPriceFilter) : true;
+    const matchesType = typeFilter
+      ? yacht.yachtType?.toLowerCase() === typeFilter.toLowerCase()
+      : true;
+    const matchesPrice = maxPriceFilter
+      ? yacht.pricePerHour <= parseFloat(maxPriceFilter)
+      : true;
     return matchesType && matchesPrice;
   });
 
@@ -72,7 +80,10 @@ const YachtListing = () => {
 
       {/* 🔍 Filter UI */}
       <div className="filter-bar">
-        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+        >
           <option value="">All Types</option>
           <option value="Luxury">Luxury</option>
           <option value="Adventure">Adventure</option>
@@ -98,15 +109,18 @@ const YachtListing = () => {
               key={item.id}
               className="yacht-card"
               onClick={() => handleCardClick(item)}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
             >
               <img src={item.imageUrl} alt={item.name} />
               <div className="yacht-card-content">
-                <span className="yacht-type">{item.yachtType || 'Yacht'}</span>
+                <span className="yacht-type">{item.yachtType || "Yacht"}</span>
                 <h3>{item.name}</h3>
                 <p className="yacht-price">
                   {formatPrice(item.pricePerHour) !== null ? (
-                    <>from <strong>EGP {formatPrice(item.pricePerHour)}/hour</strong></>
+                    <>
+                      from{" "}
+                      <strong>EGP {formatPrice(item.pricePerHour)}/hour</strong>
+                    </>
                   ) : (
                     <>Price Not Available</>
                   )}

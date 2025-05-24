@@ -21,15 +21,13 @@
   color: hsl(0, 0%, 20%);
 } */
 
-
-
 .card {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   height: 200px;
-  background-image: url('Shorely.png');
+  background-image: url("Shorely.png");
   background-size: cover;
   background-position: center;
   border-radius: 10px;
@@ -37,7 +35,6 @@
   overflow: hidden;
   transition: transform 0.3s ease-in-out;
   max-width: 350px;
-
 }
 
 /* Hover Effect */

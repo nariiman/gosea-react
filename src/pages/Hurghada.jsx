@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-import Hero from '../components/Hero';
-import HurghadaImage from '../assets/Hurghada.png'; // replace with actual image
+import { useNavigate } from "react-router-dom";
+import Hero from "../components/Hero";
+import HurghadaImage from "../assets/Hurghada.png"; // replace with actual image
 
 function Hurghada() {
   const navigate = useNavigate();
@@ -14,11 +14,18 @@ function Hurghada() {
         subtitle="Explore top yachts and exciting activities in Hurghada"
       />
 
-      <div className="button-group" style={{ textAlign: 'center', marginTop: '2rem' }}>
-        <button onClick={() => navigate(`/destinations/${destinationId}/activities`)}>
+      <div
+        className="button-group"
+        style={{ textAlign: "center", marginTop: "2rem" }}
+      >
+        <button
+          onClick={() => navigate(`/destinations/${destinationId}/activities`)}
+        >
           View Activities
         </button>
-        <button onClick={() => navigate(`/destinations/${destinationId}/yachts`)}>
+        <button
+          onClick={() => navigate(`/destinations/${destinationId}/yachts`)}
+        >
           View Yachts
         </button>
       </div>

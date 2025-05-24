@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/ss.css';
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import "../styles/ss.css";
 
 const Checkout = () => {
   const location = useLocation();
@@ -13,20 +13,25 @@ const Checkout = () => {
     return (
       <div className="checkout-container">
         <h2>No booking found</h2>
-        <button className="checkout-btn" onClick={() => navigate('/')}>Back to Home</button>
+        <button className="checkout-btn" onClick={() => navigate("/")}>
+          Back to Home
+        </button>
       </div>
     );
   }
 
-  const totalPrice = booking.items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
+  const totalPrice = booking.items.reduce(
+    (acc, item) => acc + item.price * (item.quantity || 1),
+    0
+  );
 
   const handleProceed = () => {
-    navigate('/payment', {
+    navigate("/payment", {
       state: {
         booking,
         notes,
         totalPrice,
-      }
+      },
     });
   };
 
@@ -38,12 +43,15 @@ const Checkout = () => {
       <ul>
         {booking.items.map((item, idx) => (
           <li key={idx}>
-            <strong>{item.name}</strong> — EGP {item.price} × {item.quantity || 1} = EGP {item.price * (item.quantity || 1)}
+            <strong>{item.name}</strong> — EGP {item.price} ×{" "}
+            {item.quantity || 1} = EGP {item.price * (item.quantity || 1)}
           </li>
         ))}
       </ul>
 
-      <p className="total-price"><strong>Total:</strong> EGP {totalPrice}</p>
+      <p className="total-price">
+        <strong>Total:</strong> EGP {totalPrice}
+      </p>
 
       <h4>Special Notes</h4>
       <textarea
@@ -53,7 +61,9 @@ const Checkout = () => {
         onChange={(e) => setNotes(e.target.value)}
       />
 
-      <button className="checkout-btn" onClick={handleProceed}>Proceed to Payment</button>
+      <button className="checkout-btn" onClick={handleProceed}>
+        Proceed to Payment
+      </button>
     </div>
   );
 };

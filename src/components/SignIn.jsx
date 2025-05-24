@@ -39,8 +39,22 @@ function SignIn() {
       <h1 className="page-title">Sign In</h1>
 
       <form className="contact-form" onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
         {error && <p style={{ color: "red" }}>{error}</p>}
         <button type="submit">Login</button>
       </form>

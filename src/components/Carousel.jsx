@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 // import './Hero.css';
-import '../styles/ss.css';
+import "../styles/ss.css";
 
-import Shorely from '../assets/Shorely.png';
-import Kayaking from '../assets/Kayaking.png';
-import JetSki from '../assets/JetSki.png';
+import Shorely from "../assets/Shorely.png";
+import Kayaking from "../assets/Kayaking.png";
+import JetSki from "../assets/JetSki.png";
 
-const slides = [
-  { image: Shorely },
-  { image: Kayaking },
-  { image: JetSki },
-];
-
+const slides = [{ image: Shorely }, { image: Kayaking }, { image: JetSki }];
 
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -29,7 +24,7 @@ const Hero = () => {
         {slides.map((slide, index) => (
           <div
             key={index}
-            className={`slide ${index === currentSlide ? 'active' : ''}`}
+            className={`slide ${index === currentSlide ? "active" : ""}`}
             style={{ backgroundImage: `url(${slide.image})` }}
           ></div>
         ))}

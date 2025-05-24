@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-import Hero from '../components/Hero';
-import Shorely from '../assets/Shorely.png';
+import { useNavigate } from "react-router-dom";
+import Hero from "../components/Hero";
+import Shorely from "../assets/Shorely.png";
 
 function Marsa() {
   const navigate = useNavigate();
@@ -14,11 +14,18 @@ function Marsa() {
         subtitle="Explore top yachts and exciting activities in Marsa Alam"
       />
 
-      <div className="button-group" style={{ textAlign: 'center', marginTop: '2rem' }}>
-        <button onClick={() => navigate(`/destinations/${destinationId}/activities`)}>
+      <div
+        className="button-group"
+        style={{ textAlign: "center", marginTop: "2rem" }}
+      >
+        <button
+          onClick={() => navigate(`/destinations/${destinationId}/activities`)}
+        >
           View Activities
         </button>
-        <button onClick={() => navigate(`/destinations/${destinationId}/yachts`)}>
+        <button
+          onClick={() => navigate(`/destinations/${destinationId}/yachts`)}
+        >
           View Yachts
         </button>
       </div>

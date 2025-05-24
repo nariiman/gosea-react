@@ -1,30 +1,32 @@
-import React, { useState, useEffect } from 'react';  // 🛠️ Add useEffect
-import '../styles/ss.css';
+import React, { useState, useEffect } from "react"; // 🛠️ Add useEffect
+import "../styles/ss.css";
 
 const Transportation = () => {
-  const [pickup, setPickup] = useState('');
-  const [dropoff, setDropoff] = useState('');
-  const [vehicle, setVehicle] = useState('');
-  const [time, setTime] = useState('');
-  const [notes, setNotes] = useState('');
-  const [passengers, setPassengers] = useState('');
-  const [validationMessage, setValidationMessage] = useState('');
+  const [pickup, setPickup] = useState("");
+  const [dropoff, setDropoff] = useState("");
+  const [vehicle, setVehicle] = useState("");
+  const [time, setTime] = useState("");
+  const [notes, setNotes] = useState("");
+  const [passengers, setPassengers] = useState("");
+  const [validationMessage, setValidationMessage] = useState("");
 
   const vehicleCapacities = {
-    'Sedan': 4,
-    'SUV': 6,
-    'Van': 8,
-    'Mini Bus': 15,
-    'Bus': 50
+    Sedan: 4,
+    SUV: 6,
+    Van: 8,
+    "Mini Bus": 15,
+    Bus: 50,
   };
 
   useEffect(() => {
     if (vehicle && passengers) {
       const maxCapacity = vehicleCapacities[vehicle];
       if (parseInt(passengers) > maxCapacity) {
-        setValidationMessage(`⚠️ The selected vehicle (${vehicle}) only supports up to ${maxCapacity} passengers.`);
+        setValidationMessage(
+          `⚠️ The selected vehicle (${vehicle}) only supports up to ${maxCapacity} passengers.`
+        );
       } else {
-        setValidationMessage('');
+        setValidationMessage("");
       }
     }
   }, [vehicle, passengers]);
@@ -37,7 +39,7 @@ const Transportation = () => {
     }
 
     console.log({ pickup, dropoff, vehicle, passengers, time, notes });
-    alert('Transportation request submitted!');
+    alert("Transportation request submitted!");
   };
 
   return (
@@ -70,8 +72,14 @@ const Transportation = () => {
 
         <label>
           Vehicle Type:
-          <select value={vehicle} onChange={(e) => setVehicle(e.target.value)} required>
-            <option value="" disabled>Select vehicle</option>
+          <select
+            value={vehicle}
+            onChange={(e) => setVehicle(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              Select vehicle
+            </option>
             <option value="Sedan">Sedan</option>
             <option value="SUV">SUV</option>
             <option value="Van">Van</option>

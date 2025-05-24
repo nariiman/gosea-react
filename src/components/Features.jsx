@@ -1,12 +1,17 @@
-import React from 'react';
+import React from "react";
 // import './Features.css';
-import '../styles/ss.css';
-
+import "../styles/ss.css";
 
 const features = [
-  { title: 'Best Selection', description: 'Handpicked yachts & activities.' },
-  { title: 'Best Price Guarantee', description: 'We match lower prices elsewhere.' },
-  { title: 'Best Activities', description: 'Unforgettable experiences on sea.' },
+  { title: "Best Selection", description: "Handpicked yachts & activities." },
+  {
+    title: "Best Price Guarantee",
+    description: "We match lower prices elsewhere.",
+  },
+  {
+    title: "Best Activities",
+    description: "Unforgettable experiences on sea.",
+  },
 ];
 
 const Features = () => (

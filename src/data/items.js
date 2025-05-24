@@ -1,5 +1,5 @@
-import Shorely from '../assets/Shorely.png';
-import Kayaking from '../assets/Kayaking.png';
+import Shorely from "../assets/Shorely.png";
+import Kayaking from "../assets/Kayaking.png";
 // Add more images as needed
 
 const items = [
@@ -8,7 +8,7 @@ const items = [
     name: "Kayaking",
     location: "Marsa Alam",
     type: "activity",
-    basePrice: 750,                 // price for 15 mins
+    basePrice: 750, // price for 15 mins
     durationUnit: "15-mins",
     durations: [15, 30, 45, 60],
     image: Kayaking,
@@ -63,7 +63,7 @@ const items = [
     hourlyRate: 4000,
     dailyRate: 30000,
     durations: {
-      hourly: [3, 6, 9, 12],  // in hours
+      hourly: [3, 6, 9, 12], // in hours
       daily: [1, 2, 3, 4, 5], // in days
     },
     image: Kayaking,

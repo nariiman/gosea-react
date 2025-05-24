@@ -1,22 +1,22 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import '../styles/ss.css';
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../styles/ss.css";
 
 const fetchDestinations = async () => {
-  const { data } = await axios.get('http://localhost:3000/destinations');
+  const { data } = await axios.get("http://localhost:3000/destinations");
   return data;
 };
 
 const DestinationList = () => {
   const navigate = useNavigate();
   const { data, isLoading, error } = useQuery({
-    queryKey: ['destinations'],
+    queryKey: ["destinations"],
     queryFn: fetchDestinations,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    staleTime: Infinity
+    staleTime: Infinity,
   });
 
   if (isLoading) return <p>Loading destinations...</p>;
@@ -29,9 +29,12 @@ const DestinationList = () => {
           key={destination.id}
           className="card"
           onClick={() => navigate(`/destinations/${destination.id}`)}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: "pointer" }}
         >
-          <img src={destination.imageUrl || 'fallback.png'} alt={destination.name} />
+          <img
+            src={destination.imageUrl || "fallback.png"}
+            alt={destination.name}
+          />
           <span>{destination.name}</span>
         </div>
       ))}

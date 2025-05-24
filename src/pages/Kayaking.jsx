@@ -1,11 +1,18 @@
-import Hero from '../components/Hero';
-import ActivityBookingForm from '../components/ActivityBookingForm';
-import Kayak from '../assets/Kayaking.png';
+import Hero from "../components/Hero";
+import ActivityBookingForm from "../components/ActivityBookingForm";
+import Kayak from "../assets/Kayaking.png";
 
 const kayakingTimeSlots = {
-  morning: ['9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'],
-  afternoon: ['12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM', '2:00 PM'],
-  evening: ['4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM'],
+  morning: [
+    "9:00 AM",
+    "9:30 AM",
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+  ],
+  afternoon: ["12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM"],
+  evening: ["4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM"],
 };
 
 const Kayaking = () => {

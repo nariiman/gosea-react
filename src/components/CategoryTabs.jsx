@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import items from '../data/items'; // create this file with your array
-import '../styles/ss.css';
-
+import React, { useState } from "react";
+import items from "../data/items"; // create this file with your array
+import "../styles/ss.css";
 
 const CategoryTabs = () => {
-  const [category, setCategory] = useState('activity');
+  const [category, setCategory] = useState("activity");
 
-  const filteredItems = items.filter(item => item.type === category);
+  const filteredItems = items.filter((item) => item.type === category);
 
   return (
     <>
       <div className="tabs">
         <button
-          className={`tab ${category === 'activity' ? 'active' : ''}`}
-          onClick={() => setCategory('activity')}
+          className={`tab ${category === "activity" ? "active" : ""}`}
+          onClick={() => setCategory("activity")}
         >
           Activity
         </button>
         <button
-          className={`tab ${category === 'yacht' ? 'active' : ''}`}
-          onClick={() => setCategory('yacht')}
+          className={`tab ${category === "yacht" ? "active" : ""}`}
+          onClick={() => setCategory("yacht")}
         >
           Yacht
         </button>
@@ -36,7 +35,9 @@ const CategoryTabs = () => {
                 <span className="tag">Featured</span>
                 <h3>{item.name}</h3>
                 <p className="location">{item.location}</p>
-                <p className="price">from <strong>{item.basePrice} EGP</strong></p>
+                <p className="price">
+                  from <strong>{item.basePrice} EGP</strong>
+                </p>
               </div>
             </a>
           ))

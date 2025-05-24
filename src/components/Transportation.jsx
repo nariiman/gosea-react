@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Transportation = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -7,20 +7,20 @@ const Transportation = () => {
 
   const handleTransportationClick = () => {
     if (isChecked) {
-      navigate('/transportation');
+      navigate("/transportation");
     }
   };
 
   const vehicleCapacities = {
-    'Sedan': 4,
-    'SUV': 6,
-    'Van': 8,
-    'Mini Bus': 15,
+    Sedan: 4,
+    SUV: 6,
+    Van: 8,
+    "Mini Bus": 15,
   };
 
-  const [passengers, setPassengers] = useState('');
-const [vehicleType, setVehicleType] = useState('');
-const [validationMessage, setValidationMessage] = useState('');
+  const [passengers, setPassengers] = useState("");
+  const [vehicleType, setVehicleType] = useState("");
+  const [validationMessage, setValidationMessage] = useState("");
 
   return (
     <>

@@ -39,10 +39,36 @@ function SignUp() {
       <h1 className="page-title">Sign Up</h1>
 
       <form className="contact-form" onSubmit={handleSubmit}>
-        <input name="firstName" placeholder="First Name" value={form.firstName} onChange={handleChange} required />
-        <input name="lastName" placeholder="Last Name" value={form.lastName} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+        <input
+          name="firstName"
+          placeholder="First Name"
+          value={form.firstName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="lastName"
+          placeholder="Last Name"
+          value={form.lastName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
         {error && <p style={{ color: "red" }}>{error}</p>}
         <button type="submit">Register</button>
       </form>

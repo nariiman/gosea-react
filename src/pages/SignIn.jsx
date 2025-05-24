@@ -69,7 +69,10 @@ function SignIn() {
 
       <p style={{ marginTop: "15px" }}>
         Don't have an account?{" "}
-        <Link to="/signup" style={{ color: "#3366FF", textDecoration: "underline" }}>
+        <Link
+          to="/signup"
+          style={{ color: "#3366FF", textDecoration: "underline" }}
+        >
           Sign Up
         </Link>
       </p>

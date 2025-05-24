@@ -1,12 +1,11 @@
-import React from 'react';
+import React from "react";
 // import './CateringPartners.css';
-import '../styles/ss.css';
-
+import "../styles/ss.css";
 
 const partners = [
-  { name: 'El Gouna', logo: '/path/to/elgouna-logo.png' },
-  { name: 'Chef\'s Kiss', logo: '/path/to/chefskiss-logo.png' },
-  { name: 'The Y Catering', logo: '/path/to/ycatering-logo.png' },
+  { name: "El Gouna", logo: "/path/to/elgouna-logo.png" },
+  { name: "Chef's Kiss", logo: "/path/to/chefskiss-logo.png" },
+  { name: "The Y Catering", logo: "/path/to/ycatering-logo.png" },
 ];
 
 const CateringPartners = () => (
