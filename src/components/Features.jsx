@@ -1,6 +1,4 @@
 import React from "react";
-// import './Features.css';
-import "../styles/ss.css";
 
 const features = [
   { title: "Best Selection", description: "Handpicked yachts & activities." },

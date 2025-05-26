@@ -8,14 +8,16 @@ function SignIn() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -27,36 +29,42 @@ function SignIn() {
       localStorage.setItem("token", token);
       navigate("/");
     } catch (err) {
-      setError(err.message);
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
+    setError("");
+    setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const token = await result.user.getIdToken();
       localStorage.setItem("token", token);
       navigate("/");
     } catch (err) {
-      setError(err.message);
+      setError("Google sign-in failed. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-wrapper">
-      <Header />
-
-      <div className="auth-container">
-        <h1 className="auth-title">Sign In</h1>
+    <div className="auth-page full-screen-auth">
+      <main className="auth-container">
+        <h1 className="auth-title">Welcome Back</h1>
+        <p className="auth-subtitle">Sign in to continue your journey</p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Email address"
             value={form.email}
             onChange={handleChange}
             required
+            aria-label="Email"
           />
 
           <input
@@ -66,29 +74,35 @@ function SignIn() {
             value={form.password}
             onChange={handleChange}
             required
+            aria-label="Password"
           />
 
           {error && <p className="auth-error">{error}</p>}
 
-          <button type="submit">Login</button>
-
-          <button
-            type="button"
-            className="google-btn"
-            onClick={handleGoogleSignIn}
-          >
-            <img
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-              alt="Google icon"
-            />
-            Continue with Google
+          <button type="submit" disabled={loading}>
+            {loading ? "Signing in..." : "Login"}
           </button>
         </form>
 
-        <p style={{ textAlign: "center", marginTop: "1rem" }}>
-          Don't have an account? <Link to="/signup">Sign up</Link>
+        <div className="divider">OR</div>
+
+        <button
+          type="button"
+          className="google-btn"
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+        >
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google icon"
+          />
+          Continue with Google
+        </button>
+
+        <p className="auth-footer">
+          Don’t have an account? <Link to="/signup">Sign up</Link>
         </p>
-      </div>
+      </main>
     </div>
   );
 }

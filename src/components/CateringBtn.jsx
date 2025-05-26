@@ -15,7 +15,7 @@ const CateringBtn = ({ destinationId }) => {
   };
 
   return (
-    <button className="catering-btn" onClick={handleClick}>
+    <button className="btn btn-primary" onClick={handleClick}>
       View Catering Options 🍽️
     </button>
   );

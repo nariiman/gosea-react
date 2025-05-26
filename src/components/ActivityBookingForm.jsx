@@ -100,15 +100,17 @@ const ActivityBookingForm = () => {
   };
 
   return (
-    <div className="booking-wrapper">
-      <header className="booking-header">
+    <div className="booking-container">
+      {/* Hero */}
+      <div className="booking-header">
         <img src={mainImage} alt={name} className="booking-header-img" />
         <div className="booking-header-overlay">
           <h1>{name}</h1>
         </div>
-      </header>
+      </div>
 
-      <section className="booking-gallery">
+      {/* Gallery */}
+      <div className="booking-gallery">
         {gallery.map((img, idx) => (
           <img
             key={idx}
@@ -118,8 +120,9 @@ const ActivityBookingForm = () => {
             className="gallery-thumb"
           />
         ))}
-      </section>
+      </div>
 
+      {/* Lightbox */}
       {activeImgIndex !== null && (
         <div
           className="lightbox-overlay"
@@ -135,7 +138,7 @@ const ActivityBookingForm = () => {
             >
               ×
             </button>
-            <img src={gallery[activeImgIndex]} alt="Large View" />
+            <img src={gallery[activeImgIndex]} alt="Preview" />
             <button
               className="lightbox-prev"
               onClick={() =>
@@ -158,21 +161,21 @@ const ActivityBookingForm = () => {
         </div>
       )}
 
-      <section className="booking-section-intro">
-        <div className="booking-callout">
-          <h2>Ready for your adventure?</h2>
-          <p>Secure your spot and customize your ride today.</p>
-          <button
-            className="primary-book-btn"
-            onClick={() => setFormOpen(!formOpen)}
-          >
-            {formOpen ? "Hide Booking Form" : "Start Booking →"}
-          </button>
-        </div>
+      {/* Callout CTA */}
+      <section className="booking-callout">
+        <h2>Ready for your adventure?</h2>
+        <p>Secure your spot and customize your ride today.</p>
+        <button
+          className="btn btn-primary"
+          onClick={() => setFormOpen(!formOpen)}
+        >
+          {formOpen ? "Hide Booking Form" : "Start Booking →"}
+        </button>
       </section>
 
+      {/* Booking Form */}
       {formOpen && (
-        <div className="booking-content">
+        <section className="booking-content">
           <div className="booking-form">
             <label>Date</label>
             <input
@@ -202,8 +205,8 @@ const ActivityBookingForm = () => {
                   onChange={(e) => setSelectedTime(e.target.value)}
                 >
                   <option value="">Choose Time Slot</option>
-                  {timeSlots[preferredTime].map((time, index) => (
-                    <option key={index} value={time}>
+                  {timeSlots[preferredTime].map((time, idx) => (
+                    <option key={idx} value={time}>
                       {time}
                     </option>
                   ))}
@@ -242,15 +245,16 @@ const ActivityBookingForm = () => {
             )}
 
             <TransportationModal />
-            <button className="checkout-btn" onClick={handleBooking}>
+
+            <button className="btn btn-primary" onClick={handleBooking}>
               Book Now
             </button>
           </div>
-        </div>
+        </section>
       )}
 
-      {/* FAQs & Policies */}
-      <div className="booking-extras-card">
+      {/* Extras Section */}
+      <section className="booking-extras-card">
         <details>
           <summary>📄 Cancellation Policy</summary>
           <p>
@@ -279,7 +283,7 @@ const ActivityBookingForm = () => {
             price.
           </p>
         </details>
-      </div>
+      </section>
     </div>
   );
 };

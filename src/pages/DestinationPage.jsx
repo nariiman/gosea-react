@@ -1,53 +1,44 @@
-import { useNavigate, useParams } from "react-router-dom";
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import Hero from "../components/Hero";
-// import MarsaImage from '../assets/marsa.jpg';
-// import HurghadaImage from '../assets/hurghada.jpg';
-// import SharmImage from '../assets/sharm.jpg';
-// import CairoImage from '../assets/cairo.jpg';
-// import ElGounaImage from '../assets/gouna.jpg';
-// import AlexImage from '../assets/alex.jpg';
-import Shorely from "../assets/Shorely.png";
-
-const destinationData = {
-  1: {
-    name: "Marsa Alam",
-    image: Shorely,
-    subtitle: "Explore top yachts and exciting activities in Marsa Alam",
-  },
-  2: {
-    name: "Hurghada",
-    image: Shorely,
-    subtitle: "Explore top yachts and exciting activities in Hurghada",
-  },
-  3: {
-    name: "Sharm El Sheikh",
-    image: Shorely,
-    subtitle: "Enjoy unforgettable experiences in Sharm El Sheikh",
-  },
-  4: {
-    name: "Cairo",
-    image: Shorely,
-    subtitle: "Cruise the Nile and discover city adventures",
-  },
-  5: {
-    name: "El Gouna",
-    image: Shorely,
-    subtitle: "Luxury, water, and relaxation await you in El Gouna",
-  },
-  6: {
-    name: "Alexandria",
-    image: Shorely,
-    subtitle: "Yachts and culture on the Mediterranean",
-  },
-};
 
 function DestinationPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const destination = destinationData[id];
+  const {
+    data: destination,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["destination", id],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `http://localhost:3000/destinations/${id}`
+      );
+      return data;
+    },
+    enabled: !!id,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
-  if (!destination) {
+  const handleNavigate = (type) => {
+    navigate(`/destinations/${id}/${type}`);
+  };
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: "2rem", textAlign: "center" }}>
+        <p>Loading destination...</p>
+      </div>
+    );
+  }
+
+  if (isError || !destination) {
     return (
       <div style={{ padding: "2rem", textAlign: "center" }}>
         <h2>Destination Not Found 🛑</h2>
@@ -56,19 +47,17 @@ function DestinationPage() {
     );
   }
 
-  const handleNavigate = (type) => {
-    navigate(`/destinations/${id}/${type}`);
-  };
-
   return (
     <div className="destination-page">
       <Hero
-        backgroundImage={destination.image}
+        backgroundImage={destination.imageUrl || "/assets/Shorely.png"}
         title={`Discover ${destination.name}`}
-        subtitle={destination.subtitle}
+        subtitle={
+          destination.description ||
+          `Explore unforgettable experiences in ${destination.name}`
+        }
       />
 
-      {/* Bubble Tags */}
       <section className="bubbles">
         {[
           { label: "Sunset Cruises", icon: "🌅" },
@@ -83,11 +72,14 @@ function DestinationPage() {
         ))}
       </section>
 
-      {/* Section 1 - Activities */}
       <section className="split-section reverse">
         <div
           className="image full-bg"
-          style={{ backgroundImage: `url(${destination.image})` }}
+          style={{
+            backgroundImage: `url(${
+              destination.imageUrl || "/assets/Shorely.png"
+            })`,
+          }}
         ></div>
         <div className="text">
           <h2>Explore Activities</h2>
@@ -105,11 +97,14 @@ function DestinationPage() {
         </div>
       </section>
 
-      {/* Section 2 - Yachts */}
       <section className="split-section">
         <div
           className="image full-bg"
-          style={{ backgroundImage: `url(${destination.image})` }}
+          style={{
+            backgroundImage: `url(${
+              destination.imageUrl || "/assets/Shorely.png"
+            })`,
+          }}
         ></div>
         <div className="text">
           <h2>Book a Yacht</h2>

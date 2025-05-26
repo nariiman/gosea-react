@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase";
-import Header from "../components/Header";
 
-function SignIn() {
+function SignUp() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -18,7 +17,7 @@ function SignIn() {
     setError("");
 
     try {
-      const userCredential = await signInWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         form.email,
         form.password
@@ -31,7 +30,7 @@ function SignIn() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignUp = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const token = await result.user.getIdToken();
@@ -44,9 +43,8 @@ function SignIn() {
 
   return (
     <div className="page-container">
-      <Header />
       <div className="auth-container">
-        <h1 className="auth-title">Welcome Back</h1>
+        <h1 className="auth-title">Create an Account</h1>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <input
@@ -66,12 +64,12 @@ function SignIn() {
             required
           />
           {error && <p className="auth-error">{error}</p>}
-          <button type="submit">Login</button>
+          <button type="submit">Sign Up</button>
 
           <button
             type="button"
             className="google-btn"
-            onClick={handleGoogleSignIn}
+            onClick={handleGoogleSignUp}
           >
             <img
               src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -89,4 +87,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignUp;

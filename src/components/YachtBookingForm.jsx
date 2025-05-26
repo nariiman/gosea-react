@@ -139,16 +139,16 @@ const YachtBookingForm = () => {
 
     const payload = {
       bookingType,
-      bookingDate: now.toISOString(), // set now
+      bookingDate: now.toISOString(),
       reservationDate:
         bookingType === "hourly"
           ? hourlyDate
           : bookingType === "overnight"
           ? startDate
           : undefined,
-      reservationTime: startTime || "00:00", // ensure this is a valid time string
+      reservationTime: startTime || "00:00",
       numberOfPeople: parseInt(guests),
-      bookingPrice: price.toFixed(2), // ensure string with 2 decimals
+      bookingPrice: price.toFixed(2),
       userUid: user.uid,
       yachtId: state.id,
       activities: selectedActivities.map((a) => a.id),
@@ -185,202 +185,130 @@ const YachtBookingForm = () => {
   }
 
   return (
-    <div className="booking-wrapper">
-      <header className="booking-header">
-        <img src={mainImage} alt={name} className="booking-header-img" />
-        <div className="booking-header-overlay">
-          <h1>{name}</h1>
-        </div>
-      </header>
+    <div className="details">
+      <h2>{name}</h2>
+      <p>{mainDescription}</p>
+      <img src={mainImage} alt={name} className="hero-image" />
 
-      <section className="booking-gallery">
-        {gallery.map((img, idx) => (
-          <img
-            key={idx}
-            src={img}
-            alt={`Gallery ${idx + 1}`}
-            onClick={() => setActiveImgIndex(idx)}
-            className="gallery-thumb"
+      <label>Booking Type</label>
+      <select
+        value={bookingType}
+        onChange={(e) => setBookingType(e.target.value)}
+      >
+        <option value="hourly">Hourly</option>
+        <option value="overnight">Overnight Trip</option>
+      </select>
+
+      {bookingType === "hourly" && (
+        <>
+          <label>Booking Date</label>
+          <input
+            type="date"
+            value={hourlyDate}
+            onChange={(e) => setHourlyDate(e.target.value)}
           />
-        ))}
-      </section>
 
-      {activeImgIndex !== null && (
-        <div
-          className="lightbox-overlay"
-          onClick={() => setActiveImgIndex(null)}
-        >
-          <div
-            className="lightbox-content"
-            onClick={(e) => e.stopPropagation()}
+          <label>Start Time</label>
+          <select
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
           >
-            <button
-              className="lightbox-close"
-              onClick={() => setActiveImgIndex(null)}
-            >
-              ×
-            </button>
-            <img src={gallery[activeImgIndex]} alt="Large View" />
-            <button
-              className="lightbox-prev"
-              onClick={() =>
-                setActiveImgIndex(
-                  (activeImgIndex - 1 + gallery.length) % gallery.length
-                )
-              }
-            >
-              ⟨
-            </button>
-            <button
-              className="lightbox-next"
-              onClick={() =>
-                setActiveImgIndex((activeImgIndex + 1) % gallery.length)
-              }
-            >
-              ⟩
-            </button>
-          </div>
+            <option value="">Select Start Time</option>
+            {startTimes.map((time, index) => (
+              <option key={index} value={time}>
+                {time}
+              </option>
+            ))}
+          </select>
+
+          <label>Hours</label>
+          <select value={hours} onChange={(e) => setHours(e.target.value)}>
+            <option value="">Select</option>
+            {[2, 4, 6, 8].map((h) => (
+              <option key={h} value={h}>
+                {h} hours
+              </option>
+            ))}
+          </select>
+        </>
+      )}
+
+      {bookingType === "overnight" && (
+        <>
+          <label>Start Date</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <label>End Date</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+          {dateError && <p className="error-message">{dateError}</p>}
+        </>
+      )}
+
+      <label>Guests</label>
+      <input
+        type="number"
+        value={guests}
+        onChange={(e) => setGuests(e.target.value)}
+        min={1}
+        max={50}
+        placeholder="Number of guests"
+      />
+
+      <label>Activities</label>
+      {loadingActivities ? (
+        <p>Loading...</p>
+      ) : activitiesError ? (
+        <p className="error-message">{activitiesError}</p>
+      ) : (
+        <Select
+          isMulti
+          options={activityOptions}
+          value={selectedActivities}
+          onChange={(options) => setSelectedActivities(options || [])}
+        />
+      )}
+
+      <CateringBtn destinationId={destinationId} />
+      <TransportationModal />
+
+      {price !== null && price > 0 && (
+        <div className="activity-receipt">
+          <h4>Summary</h4>
+          {selectedActivities.length > 0 && (
+            <>
+              <ul>
+                {selectedActivities.map((a, i) => (
+                  <li key={i}>
+                    {a.name} — EGP {a.price}
+                  </li>
+                ))}
+              </ul>
+              <p>
+                <strong>Activities Total:</strong> EGP{" "}
+                {selectedActivities.reduce((acc, act) => acc + act.price, 0)}
+              </p>
+            </>
+          )}
+          <p className="price-display">
+            <strong>Total Estimate:</strong> EGP {price}
+          </p>
         </div>
       )}
 
-      <section className="yacht-details-card">
-        <div className="yacht-details-content">
-          <div className="yacht-main-text">
-            <h2>{name}</h2>
-            {mainDescription && <p>{mainDescription}</p>}
-            <ul className="yacht-specs-compact">
-              <li>🧍 {guestCapacity} Guests</li>
-              <li>🛏️ {beds} Beds</li>
-              <li>⏱️ EGP {hourlyRate}/hour</li>
-              <li>📅 EGP {dailyRate}/day</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <div className="booking-content">
-        <div className="booking-form">
-          <label>Booking Type</label>
-          <select
-            value={bookingType}
-            onChange={(e) => setBookingType(e.target.value)}
-          >
-            <option value="hourly">Hourly</option>
-            <option value="overnight">Overnight Trip</option>
-          </select>
-
-          {bookingType === "hourly" && (
-            <>
-              <label>Booking Date</label>
-              <input
-                type="date"
-                value={hourlyDate}
-                onChange={(e) => setHourlyDate(e.target.value)}
-              />
-
-              <label>Start Time</label>
-              <select
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-              >
-                <option value="">Select Start Time</option>
-                {startTimes.map((time, index) => (
-                  <option key={index} value={time}>
-                    {time}
-                  </option>
-                ))}
-              </select>
-
-              <label>Hours</label>
-              <select value={hours} onChange={(e) => setHours(e.target.value)}>
-                <option value="">Select</option>
-                {[2, 4, 6, 8].map((h) => (
-                  <option key={h} value={h}>
-                    {h} hours
-                  </option>
-                ))}
-              </select>
-            </>
-          )}
-
-          {bookingType === "overnight" && (
-            <>
-              <label>Start Date</label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-              <label>End Date</label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-              {dateError && <p className="error-message">{dateError}</p>}
-            </>
-          )}
-
-          <label>Guests</label>
-          <input
-            type="number"
-            value={guests}
-            onChange={(e) => setGuests(e.target.value)}
-            min={1}
-            max={50}
-            placeholder="Number of guests"
-          />
-
-          <label>Activities</label>
-          {loadingActivities ? (
-            <p>Loading...</p>
-          ) : activitiesError ? (
-            <p className="error-message">{activitiesError}</p>
-          ) : (
-            <Select
-              isMulti
-              options={activityOptions}
-              value={selectedActivities}
-              onChange={(options) => setSelectedActivities(options || [])}
-            />
-          )}
-
-          <CateringBtn destinationId={destinationId} />
-          <TransportationModal />
-
-          <button
-            className="checkout-btn"
-            disabled={!price || price <= 0}
-            onClick={handleBooking}
-          >
-            Reserve Yacht
-          </button>
-        </div>
-
-        {price !== null && price > 0 && (
-          <div className="booking-summary">
-            <h3>Summary</h3>
-            {selectedActivities.length > 0 && (
-              <>
-                <ul>
-                  {selectedActivities.map((a, i) => (
-                    <li key={i}>
-                      {a.name} — EGP {a.price}
-                    </li>
-                  ))}
-                </ul>
-                <p>
-                  <strong>Activities Total:</strong> EGP{" "}
-                  {selectedActivities.reduce((acc, act) => acc + act.price, 0)}
-                </p>
-              </>
-            )}
-            <p className="price-display">
-              <strong>Total Estimate:</strong> EGP {price}
-            </p>
-          </div>
-        )}
-      </div>
+      <button
+        className="btn btn-primary"
+        disabled={!price || price <= 0}
+        onClick={handleBooking}
+      >
+        Reserve Yacht
+      </button>
     </div>
   );
 };

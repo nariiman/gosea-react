@@ -22,6 +22,8 @@ import SignIn from "./pages/SignIn";
 import Services from "./pages/Services.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
+import MyBookings from "./pages/MyBookings.jsx";
+import BookingDetail from "./pages/BookingDetails.jsx";
 
 function AppRoutes() {
   return (
@@ -47,6 +49,8 @@ function AppRoutes() {
       <Route path="/about" element={<About />} />
       <Route path="/services" element={<Services />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/bookings" element={<MyBookings />} />
+      <Route path="/bookings/:id" element={<BookingDetail />} />
     </Routes>
   );
 }

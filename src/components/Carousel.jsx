@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import './Hero.css';
 import "../styles/ss.css";
 
 import Shorely from "../assets/Shorely.png";
@@ -26,7 +25,7 @@ const Hero = () => {
             key={index}
             className={`slide ${index === currentSlide ? "active" : ""}`}
             style={{ backgroundImage: `url(${slide.image})` }}
-          ></div>
+          />
         ))}
       </div>
       <div className="overlay">

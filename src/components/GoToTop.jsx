@@ -3,14 +3,9 @@ import React, { useState, useEffect } from "react";
 const GoToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // Listen to scroll event
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.pageYOffset > 300);
     };
 
     window.addEventListener("scroll", toggleVisibility);
@@ -25,31 +20,13 @@ const GoToTop = () => {
   };
 
   return (
-    <div>
-      <button
-        onClick={scrollToTop}
-        style={{
-          position: "fixed",
-          bottom: "40px",
-          right: "40px",
-          width: "50px",
-          height: "50px",
-          borderRadius: "50%",
-          backgroundColor: "#002244",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-          fontSize: "24px",
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-          opacity: isVisible ? 1 : 0,
-          transform: isVisible ? "translateY(0)" : "translateY(20px)",
-          zIndex: 1000,
-          transition: "opacity 0.4s, transform 0.3s, background-color 0.3s",
-        }}
-      >
-        ↑
-      </button>
-    </div>
+    <button
+      onClick={scrollToTop}
+      aria-label="Scroll to top"
+      className={`go-to-top ${isVisible ? "visible" : ""}`}
+    >
+      ↑
+    </button>
   );
 };
 

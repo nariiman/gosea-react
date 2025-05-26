@@ -2,7 +2,6 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/ss.css";
 
 const fetchDestinations = async () => {
   const { data } = await axios.get("http://localhost:3000/destinations");
@@ -27,13 +26,15 @@ const DestinationList = () => {
       {data.map((destination) => (
         <div
           key={destination.id}
-          className="card"
+          className="destination-card"
           onClick={() => navigate(`/destinations/${destination.id}`)}
-          style={{ cursor: "pointer" }}
+          role="button"
+          aria-label={destination.name}
         >
           <img
-            src={destination.imageUrl || "fallback.png"}
+            src={destination.imageUrl || "/fallback.png"}
             alt={destination.name}
+            loading="lazy"
           />
           <span>{destination.name}</span>
         </div>

@@ -1,15 +1,16 @@
 import React from "react";
-import "../styles/ss.css";
 
 function Contact() {
   return (
     <div className="page-container">
-      <h1 className="page-title">Contact Us</h1>
-      <p className="page-subtitle">
-        We'd love to hear from you. Reach out anytime!
-      </p>
+      <section className="contact-hero">
+        <h1 className="page-title">Contact Us</h1>
+        <p className="page-subtitle">
+          We'd love to hear from you. Reach out anytime!
+        </p>
+      </section>
 
-      <div className="contact-info">
+      <section className="contact-info">
         <p>
           <strong>Email:</strong> support@shorely.com
         </p>
@@ -19,7 +20,7 @@ function Contact() {
         <p>
           <strong>Location:</strong> Marina Bay, Seaside City
         </p>
-      </div>
+      </section>
 
       <form className="contact-form">
         <input type="text" placeholder="Your Name" required />

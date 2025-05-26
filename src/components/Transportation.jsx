@@ -37,7 +37,7 @@ const Transportation = () => {
 
       <div className="transportation-button-wrapper">
         <button
-          className="transportation-btn"
+          className="btn btn-primary"
           disabled={!isChecked}
           onClick={handleTransportationClick}
         >

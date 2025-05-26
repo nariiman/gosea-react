@@ -796,7 +796,7 @@ hr {
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
-  padding: 30px 5%;
+  padding: 30px 0;
   margin-top: 20px;
 }
 
@@ -880,13 +880,16 @@ hr {
 .booking-gallery {
   display: flex;
   overflow-x: auto;
-  padding: 20px 5%;
+  padding: 20px 0;
   gap: 12px;
   cursor: pointer;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .gallery-thumb {
-  width: 180px;
+  width: 200px;
   height: 120px;
   object-fit: cover;
   border-radius: 10px;
@@ -897,42 +900,6 @@ hr {
 
 .gallery-thumb:hover {
   transform: scale(1.05);
-}
-
-/* ============================== */
-/* ✅ LIGHTBOX OVERLAY           */
-/* ============================== */
-.lightbox-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  background-color: rgba(0, 0, 0, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.3s ease;
-  cursor: pointer;
-}
-
-.lightbox-content {
-  position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
-  background: transparent;
-  border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-  cursor: default;
-}
-
-.lightbox-content img {
-  display: block;
-  max-width: 100%;
-  max-height: 90vh;
-  height: auto;
-  width: auto;
-  object-fit: contain;
-  border-radius: 16px;
 }
 
 /* ============================== */
