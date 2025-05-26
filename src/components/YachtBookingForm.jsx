@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
-import CateringBtn from "./CateringBtn";
+import CateringModal from "./CateringModal"; // New modal
 import TransportationModal from "./TransportationModal";
 import { useAuth } from "../hooks/useAuth";
 import { useTransportation } from "../contexts/TransporationContext.jsx";
+import { useCatering } from "../contexts/CateringContext.jsx"; // 🍽️
 
 const YachtBookingForm = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { transportationRequest } = useTransportation();
+  const { cateringRequest } = useCatering(); // 🍽️
 
   const {
     name = "",
@@ -126,8 +128,18 @@ const YachtBookingForm = () => {
       0
     );
 
-    setPrice(yachtPrice + activitiesTotal);
-  }, [bookingType, hours, startDate, endDate, guests, selectedActivities]);
+    const cateringTotal = cateringRequest?.total || 0;
+
+    setPrice(yachtPrice + activitiesTotal + cateringTotal);
+  }, [
+    bookingType,
+    hours,
+    startDate,
+    endDate,
+    guests,
+    selectedActivities,
+    cateringRequest,
+  ]);
 
   const handleBooking = async () => {
     if (!user?.uid) {
@@ -153,6 +165,13 @@ const YachtBookingForm = () => {
       yachtId: state.id,
       activities: selectedActivities.map((a) => a.id),
       transportationRequest: transportationRequest || undefined,
+      catering: cateringRequest
+        ? {
+            menus: cateringRequest.menus.map((m) => m.id),
+            notes: cateringRequest.notes,
+            total: cateringRequest.total,
+          }
+        : undefined,
     };
 
     try {
@@ -275,8 +294,11 @@ const YachtBookingForm = () => {
         />
       )}
 
-      <CateringBtn destinationId={destinationId} />
       <TransportationModal />
+      <CateringModal
+        destinationId={destinationId}
+        guests={parseInt(guests || 1)}
+      />
 
       {price !== null && price > 0 && (
         <div className="activity-receipt">
@@ -293,6 +315,20 @@ const YachtBookingForm = () => {
               <p>
                 <strong>Activities Total:</strong> EGP{" "}
                 {selectedActivities.reduce((acc, act) => acc + act.price, 0)}
+              </p>
+            </>
+          )}
+          {cateringRequest && (
+            <>
+              <ul>
+                {cateringRequest.menus.map((m, i) => (
+                  <li key={i}>
+                    {m.name} — EGP {m.pricePerPerson} × {guests}
+                  </li>
+                ))}
+              </ul>
+              <p>
+                <strong>Catering Total:</strong> EGP {cateringRequest.total}
               </p>
             </>
           )}

@@ -38,7 +38,6 @@ const Transportation = () => {
       return;
     }
 
-    console.log({ pickup, dropoff, vehicle, passengers, time, notes });
     alert("Transportation request submitted!");
   };
 

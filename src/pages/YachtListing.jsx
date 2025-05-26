@@ -40,6 +40,7 @@ const YachtListing = () => {
   const handleCardClick = (yacht) => {
     navigate(`/yachts/${yacht.id}`, {
       state: {
+        id: yacht.id,
         name: yacht.name,
         hourlyRate: yacht.pricePerHour,
         dailyRate: yacht.pricePerHour ? yacht.pricePerHour * 8 : 0,
