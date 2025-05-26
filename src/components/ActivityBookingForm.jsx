@@ -249,30 +249,36 @@ const ActivityBookingForm = () => {
         </div>
       )}
 
+      {/* FAQs & Policies */}
       <div className="booking-extras-card">
-        <h3>Cancellation Policy</h3>
-        <p>
-          Cancellations up to 24 hours before the activity will be fully
-          refunded. No refunds for same-day cancellations.
-        </p>
-
-        <h3>Safety & Regulations</h3>
-        <p>
-          All riders must wear life jackets provided. Participation under the
-          influence of alcohol or drugs is strictly prohibited.
-        </p>
-
-        <h3>FAQs</h3>
-        <p>
-          <strong>Q: Can children participate?</strong>
-          <br />
-          A: Yes, children above 10 years old can join with adult supervision.
-        </p>
-        <p>
-          <strong>Q: Is equipment provided?</strong>
-          <br />
-          A: Yes, all necessary safety and riding gear is included in the price.
-        </p>
+        <details>
+          <summary>📄 Cancellation Policy</summary>
+          <p>
+            Cancellations up to 24 hours before the activity will be fully
+            refunded. No refunds for same-day cancellations.
+          </p>
+        </details>
+        <details>
+          <summary>🦺 Safety & Regulations</summary>
+          <p>
+            All riders must wear life jackets provided. Participation under the
+            influence of alcohol or drugs is strictly prohibited.
+          </p>
+        </details>
+        <details>
+          <summary>❓ FAQs</summary>
+          <p>
+            <strong>Q: Can children participate?</strong>
+            <br />
+            A: Yes, children above 10 years old can join with adult supervision.
+          </p>
+          <p>
+            <strong>Q: Is equipment provided?</strong>
+            <br />
+            A: Yes, all necessary safety and riding gear is included in the
+            price.
+          </p>
+        </details>
       </div>
     </div>
   );

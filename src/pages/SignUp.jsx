@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase";
+import Header from "../components/Header";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -42,45 +43,48 @@ function SignIn() {
   };
 
   return (
-    <div className="auth-container">
-      <h1 className="auth-title">Welcome Back</h1>
+    <div className="page-container">
+      <Header />
+      <div className="auth-container">
+        <h1 className="auth-title">Welcome Back</h1>
 
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-        {error && <p className="auth-error">{error}</p>}
-        <button type="submit">Login</button>
-
-        <button
-          type="button"
-          className="google-btn"
-          onClick={handleGoogleSignIn}
-        >
-          <img
-            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-            alt="Google icon"
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
           />
-          Continue with Google
-        </button>
-      </form>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          {error && <p className="auth-error">{error}</p>}
+          <button type="submit">Login</button>
 
-      <p style={{ textAlign: "center", marginTop: "1rem" }}>
-        Already have an account? <Link to="/signin">Sign in</Link>
-      </p>
+          <button
+            type="button"
+            className="google-btn"
+            onClick={handleGoogleSignIn}
+          >
+            <img
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              alt="Google icon"
+            />
+            Continue with Google
+          </button>
+        </form>
+
+        <p style={{ textAlign: "center", marginTop: "1rem" }}>
+          Already have an account? <Link to="/signin">Sign in</Link>
+        </p>
+      </div>
     </div>
   );
 }

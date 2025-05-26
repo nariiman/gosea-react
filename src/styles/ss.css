@@ -116,14 +116,15 @@ nav ul li a:hover {
   transition: background 0.3s ease;
 }
 
-.btn-primary {
-  background-color: #377dff;
-  color: white;
+/* .btn-primary {
+  border: 1px solid darkblue;
+  background-color: none;
+  color: darkblue;
 }
 
 .btn-primary:hover {
-  background-color: #2563eb;
-}
+  background-color: #377dff54; */
+/* } */
 
 .btn-outline {
   background-color: white;
@@ -1477,22 +1478,23 @@ textarea {
 }
 
 .btn-primary {
-  background: #002244;
-  color: white;
+  background: none;
+  color: black;
+  border: 1px solid black;
 }
 
 .btn-secondary {
-  background: #0062ff;
-  color: white;
-  border: 1px solid #ccc;
+  background: none;
+  color: black;
+  border: 1px solid black;
 }
 
 .btn-primary:hover {
-  background: #007bff;
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .btn-secondary:hover {
-  background: #007bff;
+  background: rgba(0, 0, 0, 0.15);
 }
 
 /* Bubble Section */
@@ -1557,9 +1559,9 @@ textarea {
 
 .auth-container button {
   padding: 12px;
-  background-color: #0077ff;
-  color: white;
-  border: none;
+  background-color: none;
+  color: black;
+  border: 1 px solid black;
   font-size: 16px;
   border-radius: 6px;
   cursor: pointer;
@@ -1567,7 +1569,7 @@ textarea {
 }
 
 .auth-container button:hover {
-  background-color: #005fcc;
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 .auth-container .switch-link {
@@ -1588,10 +1590,10 @@ textarea {
 /* ---------------------------navpages */
 
 .page-container {
-  max-width: 900px;
-  margin: 80px auto;
-  padding: 20px;
-  text-align: center;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 .page-title {
@@ -1746,13 +1748,17 @@ textarea {
   color: #002244;
   text-align: center;
 }
-
+/* Updated grid wrapper to constrain width on single card */
 .activities-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 30px;
+  max-width: 360px; /* keeps layout compact */
+  margin: 0 auto; /* center horizontally */
+  padding: 20px;
 }
 
+/* Card styling */
 .activity-card {
   background: white;
   border-radius: 12px;
@@ -1977,29 +1983,41 @@ textarea {
 }
 
 /* Extra Info Section (FAQs, Safety, etc) */
-.booking-extras-card,
-.activity-extra-info {
-  background: #fdfdfd;
-  padding: 32px;
-  border-radius: 14px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e4eaf0;
-  margin-top: 24px;
+/* Extras (Policies / FAQs) */
+.booking-extras-card {
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.booking-extras-card h3,
-.activity-extra-info h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #1b3552;
+.booking-extras-card details {
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 15px;
+  background: white;
+  transition: all 0.3s;
 }
 
-.booking-extras-card p,
-.activity-extra-info p {
-  font-size: 15px;
-  color: #333;
-  line-height: 1.7;
-  margin-bottom: 18px;
+.booking-extras-card summary {
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px 0;
+}
+
+.booking-extras-card details[open] {
+  border-color: #007bff;
+  background: #eaf4ff;
+}
+
+.booking-extras-card p {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .checkout-btn {
@@ -2065,4 +2083,19 @@ textarea {
 .filter-bar input:focus {
   border-color: #007bff;
   outline: none;
+}
+
+/* activitiesheroo */
+.activities-hero {
+  width: 100%;
+  height: 60vh;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }

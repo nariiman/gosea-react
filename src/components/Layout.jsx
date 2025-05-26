@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
     <>
       {!shouldHideUI && <Header />}
       <div className="page-container">
-        {!shouldHideUI && <Breadcrumbs />}
+        {/* {!shouldHideUI && <Breadcrumbs />} */}
         {children}
       </div>
       <Footer />

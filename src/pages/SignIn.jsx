@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase";
+import Header from "../components/Header";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -24,7 +25,6 @@ function SignIn() {
       );
       const token = await userCredential.user.getIdToken();
       localStorage.setItem("token", token);
-
       navigate("/");
     } catch (err) {
       setError(err.message);
@@ -43,43 +43,52 @@ function SignIn() {
   };
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">Sign In</h1>
-      <form className="contact-form" onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit">Login</button>
-        <button
-          type="button"
-          className="google-btn"
-          onClick={handleGoogleSignIn}
-        >
-          <img
-            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-            alt="Google icon"
-          />
-          Continue with Google
-        </button>
-      </form>
+    <div className="auth-wrapper">
+      <Header />
 
-      <p style={{ textAlign: "center", marginTop: "1rem" }}>
-        Don't have an account? <Link to="/signup">Sign up</Link>
-      </p>
+      <div className="auth-container">
+        <h1 className="auth-title">Sign In</h1>
+
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+
+          {error && <p className="auth-error">{error}</p>}
+
+          <button type="submit">Login</button>
+
+          <button
+            type="button"
+            className="google-btn"
+            onClick={handleGoogleSignIn}
+          >
+            <img
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              alt="Google icon"
+            />
+            Continue with Google
+          </button>
+        </form>
+
+        <p style={{ textAlign: "center", marginTop: "1rem" }}>
+          Don't have an account? <Link to="/signup">Sign up</Link>
+        </p>
+      </div>
     </div>
   );
 }
