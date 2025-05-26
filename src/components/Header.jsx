@@ -42,6 +42,11 @@ function Header() {
             <li>
               <Link to="/contact">Contact</Link>
             </li>
+            {user && (
+              <li>
+                <Link to="/bookings">My Bookings</Link>
+              </li>
+            )}
           </ul>
         </nav>
 
