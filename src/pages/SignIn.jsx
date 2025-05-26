@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../config/firebase";
 
 function SignIn() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -18,22 +17,25 @@ function SignIn() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/auth/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        form.email,
+        form.password
+      );
+      const token = await userCredential.user.getIdToken();
+      localStorage.setItem("token", token);
 
-      const data = await response.json();
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
-      if (!response.ok) {
-        throw new Error(data.message || "Invalid credentials");
-      }
-
-      // Save token
-      localStorage.setItem("token", data.token);
-
-      // Redirect to homepage
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const token = await result.user.getIdToken();
+      localStorage.setItem("token", token);
       navigate("/");
     } catch (err) {
       setError(err.message);
@@ -43,7 +45,6 @@ function SignIn() {
   return (
     <div className="page-container">
       <h1 className="page-title">Sign In</h1>
-
       <form className="contact-form" onSubmit={handleSubmit}>
         <input
           type="email"
@@ -61,20 +62,23 @@ function SignIn() {
           onChange={handleChange}
           required
         />
-
         {error && <p style={{ color: "red" }}>{error}</p>}
-
         <button type="submit">Login</button>
+        <button
+          type="button"
+          className="google-btn"
+          onClick={handleGoogleSignIn}
+        >
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google icon"
+          />
+          Continue with Google
+        </button>
       </form>
 
-      <p style={{ marginTop: "15px" }}>
-        Don't have an account?{" "}
-        <Link
-          to="/signup"
-          style={{ color: "#3366FF", textDecoration: "underline" }}
-        >
-          Sign Up
-        </Link>
+      <p style={{ textAlign: "center", marginTop: "1rem" }}>
+        Don't have an account? <Link to="/signup">Sign up</Link>
       </p>
     </div>
   );

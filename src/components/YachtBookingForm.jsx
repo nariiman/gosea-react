@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Transportation from "./Transportation";
-import CateringBtn from "./CateringBtn";
 import Select from "react-select";
+import CateringBtn from "./CateringBtn";
+import TransportationModal from "./TransportationModal";
+import { useAuth } from "../hooks/useAuth";
+import { useTransportation } from "../contexts/TransporationContext.jsx";
 
 const YachtBookingForm = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { transportationRequest } = useTransportation();
 
   const {
     name = "",
@@ -26,15 +30,6 @@ const YachtBookingForm = () => {
       "/assets/JetSki.png",
     ],
   } = state || {};
-
-  if (!state || !name || !hourlyRate || !destinationId) {
-    return (
-      <p>
-        🚫 Missing yacht or destination details. Please go back and select a
-        yacht again.
-      </p>
-    );
-  }
 
   const [bookingType, setBookingType] = useState("hourly");
   const [hourlyDate, setHourlyDate] = useState("");
@@ -93,24 +88,24 @@ const YachtBookingForm = () => {
       }
     };
 
-    fetchActivities();
+    if (destinationId) fetchActivities();
   }, [destinationId]);
 
   useEffect(() => {
     setDateError("");
-    const guestCount = guests ? parseInt(guests) : 0;
-
-    if (bookingType === "overnight" && startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      if (end < start) {
-        setDateError("🚫 End date cannot be before start date.");
-        setPrice(null);
-        return;
-      }
-    }
-
+    const guestCount = parseInt(guests);
     let yachtPrice = 0;
+
+    if (
+      bookingType === "overnight" &&
+      startDate &&
+      endDate &&
+      new Date(endDate) < new Date(startDate)
+    ) {
+      setDateError("🚫 End date cannot be before start date.");
+      setPrice(null);
+      return;
+    }
 
     if (bookingType === "hourly" && hours && guestCount > 0) {
       yachtPrice = parseInt(hours) * hourlyRate * guestCount;
@@ -123,33 +118,58 @@ const YachtBookingForm = () => {
       const diffDays = Math.ceil(
         (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)
       );
-      if (diffDays > 0) {
-        yachtPrice = diffDays * dailyRate * guestCount;
-      }
+      yachtPrice = diffDays * dailyRate * guestCount;
     }
 
     const activitiesTotal = selectedActivities.reduce(
       (acc, act) => acc + act.price,
       0
     );
+
     setPrice(yachtPrice + activitiesTotal);
   }, [bookingType, hours, startDate, endDate, guests, selectedActivities]);
 
-  const handleBooking = () => {
-    const bookingData = {
+  const handleBooking = async () => {
+    if (!user?.uid) {
+      alert("Please sign in to continue");
+      return;
+    }
+
+    const now = new Date();
+
+    const payload = {
       bookingType,
-      hourlyDate,
-      startDate,
-      endDate,
-      startTime,
-      hours,
-      guests,
-      price,
-      activityIds: selectedActivities.map((a) => a.id),
+      bookingDate: now.toISOString(), // set now
+      reservationDate:
+        bookingType === "hourly"
+          ? hourlyDate
+          : bookingType === "overnight"
+          ? startDate
+          : undefined,
+      reservationTime: startTime || "00:00", // ensure this is a valid time string
+      numberOfPeople: parseInt(guests),
+      bookingPrice: price.toFixed(2), // ensure string with 2 decimals
+      userUid: user.uid,
+      yachtId: state.id,
+      activities: selectedActivities.map((a) => a.id),
+      transportationRequest: transportationRequest || undefined,
     };
 
-    console.log("Booking:", bookingData);
-    alert("Booking submitted!");
+    try {
+      const res = await fetch("http://localhost:3000/bookings/yacht", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Booking failed");
+
+      const data = await res.json();
+      alert("Booking confirmed!");
+      navigate("/confirmation", { state: { bookingId: data.bookingId } });
+    } catch (err) {
+      alert(err.message || "Something went wrong");
+    }
   };
 
   const activityOptions = activities.map((activity) => ({
@@ -159,6 +179,10 @@ const YachtBookingForm = () => {
     name: activity.name,
     price: activity.pricePerHour,
   }));
+
+  if (!state || !name || !hourlyRate || !destinationId) {
+    return <p>🚫 Missing yacht or destination details.</p>;
+  }
 
   return (
     <div className="booking-wrapper">
@@ -225,18 +249,10 @@ const YachtBookingForm = () => {
             <h2>{name}</h2>
             {mainDescription && <p>{mainDescription}</p>}
             <ul className="yacht-specs-compact">
-              <li>
-                <i>🧍</i> {guestCapacity} Guests
-              </li>
-              <li>
-                <i>🛏️</i> {beds} Beds
-              </li>
-              <li>
-                <i>⏱️</i> EGP {hourlyRate}/hour
-              </li>
-              <li>
-                <i>📅</i> EGP {dailyRate}/day
-              </li>
+              <li>🧍 {guestCapacity} Guests</li>
+              <li>🛏️ {beds} Beds</li>
+              <li>⏱️ EGP {hourlyRate}/hour</li>
+              <li>📅 EGP {dailyRate}/day</li>
             </ul>
           </div>
         </div>
@@ -263,23 +279,17 @@ const YachtBookingForm = () => {
               />
 
               <label>Start Time</label>
-              {startTimes && startTimes.length > 0 ? (
-                <select
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                >
-                  <option value="">Select Start Time</option>
-                  {startTimes.map((time, index) => (
-                    <option key={index} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <p style={{ fontSize: "0.95rem", color: "#666" }}>
-                  No start times available.
-                </p>
-              )}
+              <select
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+              >
+                <option value="">Select Start Time</option>
+                {startTimes.map((time, index) => (
+                  <option key={index} value={time}>
+                    {time}
+                  </option>
+                ))}
+              </select>
 
               <label>Hours</label>
               <select value={hours} onChange={(e) => setHours(e.target.value)}>
@@ -336,30 +346,12 @@ const YachtBookingForm = () => {
           )}
 
           <CateringBtn destinationId={destinationId} />
-          <Transportation />
+          <TransportationModal />
 
           <button
             className="checkout-btn"
             disabled={!price || price <= 0}
-            onClick={() =>
-              navigate("/checkout", {
-                state: {
-                  yachtName: name,
-                  mainImage,
-                  guestCapacity,
-                  beds,
-                  bookingType,
-                  hourlyDate,
-                  startDate,
-                  endDate,
-                  startTime,
-                  hours,
-                  guests,
-                  price,
-                  selectedActivities,
-                },
-              })
-            }
+            onClick={handleBooking}
           >
             Reserve Yacht
           </button>
@@ -368,7 +360,6 @@ const YachtBookingForm = () => {
         {price !== null && price > 0 && (
           <div className="booking-summary">
             <h3>Summary</h3>
-
             {selectedActivities.length > 0 && (
               <>
                 <ul>
@@ -384,7 +375,6 @@ const YachtBookingForm = () => {
                 </p>
               </>
             )}
-
             <p className="price-display">
               <strong>Total Estimate:</strong> EGP {price}
             </p>

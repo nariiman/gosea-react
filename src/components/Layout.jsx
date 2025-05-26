@@ -1,14 +1,19 @@
-import React from "react";
+import { useLocation } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import Breadcrumbs from "./Breadcrumbs";
 
 const Layout = ({ children }) => {
+  const { pathname } = useLocation();
+
+  const hideRoutes = ["/signin", "/signup"];
+  const shouldHideUI = hideRoutes.includes(pathname);
+
   return (
     <>
-      <Header />
+      {!shouldHideUI && <Header />}
       <div className="page-container">
-        <Breadcrumbs />
+        {!shouldHideUI && <Breadcrumbs />}
         {children}
       </div>
       <Footer />

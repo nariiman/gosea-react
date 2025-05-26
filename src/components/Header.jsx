@@ -2,14 +2,36 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 function Header() {
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
+
+  if (loading) return null; // Avoid UI flash on refresh
+
+  // Get display name or fallback to email prefix
+  const getDisplayName = (user) => {
+    if (!user) return "";
+    return user.displayName || user.email?.split("@")[0] || "User";
+  };
+
+  // Get initials from name or email
+  const getInitials = (user) => {
+    const name = getDisplayName(user);
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
     <header className="main-header">
       <div className="container">
+        {/* Logo */}
         <div className="logo">
           <Link to="/">Shorely</Link>
         </div>
+
+        {/* Navigation */}
         <nav>
           <ul>
             <li>
@@ -27,10 +49,18 @@ function Header() {
           </ul>
         </nav>
 
+        {/* Auth Controls */}
         <div className="auth-buttons">
           {user ? (
             <>
-              <span>Welcome, {user.email}</span>
+              <div className="user-info">
+                {user.photoURL ? (
+                  <img className="avatar" src={user.photoURL} alt="User" />
+                ) : (
+                  <div className="avatar fallback">{getInitials(user)}</div>
+                )}
+                <span>{getDisplayName(user)}</span>
+              </div>
               <button className="btn btn-outline" onClick={logout}>
                 Logout
               </button>
