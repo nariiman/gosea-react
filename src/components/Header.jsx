@@ -23,8 +23,10 @@ function Header() {
     <header className="main-header">
       <div className="container header-content">
         {/* Logo */}
-        <div className="logo">
-          <Link to="/">Shorely</Link>
+        <div>
+          <Link to="/">
+            <img className="logo" src="/assets/logo.png" alt="Shorely" />
+          </Link>
         </div>
 
         {/* Navigation */}
