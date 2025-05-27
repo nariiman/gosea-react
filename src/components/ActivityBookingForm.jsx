@@ -24,6 +24,7 @@ const ActivityBookingForm = () => {
       "/assets/JetSki.png",
     ],
     id: activityId,
+    mainDescription = "",
   } = state || {};
 
   const [preferredTime, setPreferredTime] = useState("");
@@ -56,6 +57,17 @@ const ActivityBookingForm = () => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
+
+  useEffect(() => {
+    if (activeImgIndex !== null) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeImgIndex]);
 
   useEffect(() => {
     const validDuration = parseInt(duration);
@@ -160,6 +172,25 @@ const ActivityBookingForm = () => {
           </div>
         </div>
       )}
+
+      {/* Bubble-Styled Info Section */}
+      <section className="bubbles" style={{ marginBottom: "0" }}>
+        <div className="bubble-tag">💰 Price: EGP {basePrice} / {durationUnit} min</div>
+        <div className="bubble-tag">🕒 Durations: {durations.join(", ")} mins</div>
+        <div className="bubble-tag">🖼️ Gallery: {gallery.length} images</div>
+      </section>
+      <p
+        style={{
+          textAlign: "center",
+          maxWidth: "800px",
+          margin: "16px auto 24px",
+          color: "#444",
+          fontSize: "16px",
+          lineHeight: 1.6,
+        }}
+      >
+        {mainDescription || "Enjoy an unforgettable adventure with this activity. Perfect for thrill-seekers and leisure lovers alike!"}
+      </p>
 
       {/* Callout CTA */}
       <section className="booking-callout">

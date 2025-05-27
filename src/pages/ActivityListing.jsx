@@ -72,91 +72,100 @@ const ActivityListing = () => {
 
   return (
     <div className="activities-page">
+      {/* 🔥 Hero Section */}
       <div className="activities-hero">
         <video autoPlay muted loop playsInline className="hero-video">
           <source src="/assets/activitieshero.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-      </div>
-
-      <Breadcrumbs />
-      <h2 className="activities-title">Explore Activities</h2>
-
-      {/* 🔍 Filter UI */}
-      <div className="filter-bar">
-        <select
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-        >
-          <option value="">All Types</option>
-          {types.map((type, index) => (
-            <option key={index} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-        <input
-          type="number"
-          placeholder="Max Price (EGP)"
-          value={maxPriceFilter}
-          onChange={(e) => setMaxPriceFilter(e.target.value)}
-        />
-      </div>
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : filteredActivities.length === 0 ? (
-        <p>No activities found.</p>
-      ) : (
-        <div className="activities-grid">
-          {filteredActivities.map((item, index) => {
-            const priceFormatted = formatPrice(item.pricePerHour);
-
-            return (
-              <Link
-                to={`/activities/${item.id}`}
-                state={{
-                  name: item.name,
-                  basePrice: item.pricePerHour || 0,
-                  durationUnit: 15,
-                  durations: [15, 30, 45, 60],
-                  timeSlots: {
-                    morning: [
-                      "9:00 AM",
-                      "9:30 AM",
-                      "10:00 AM",
-                      "10:30 AM",
-                      "11:00 AM",
-                    ],
-                    afternoon: ["12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM"],
-                    evening: ["4:00 PM", "4:30 PM", "5:00 PM"],
-                  },
-                }}
-                key={index}
-                className="activity-card"
-              >
-                <img src={item.imageUrl} alt={item.name} />
-                <div className="activity-card-content">
-                  <span className="activity-type">
-                    {item.activity_type?.trim() || "Activity"}
-                  </span>
-
-                  <h3>{item.name}</h3>
-                  <p className="activity-price">
-                    {priceFormatted !== null ? (
-                      <>
-                        From <strong>EGP {priceFormatted}/hour</strong>
-                      </>
-                    ) : (
-                      <>Not Available</>
-                    )}
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
+        <div className="overlay">
+          <h1>Explore Exciting Activities</h1>
+          <p>
+            Choose from a variety of thrilling experiences in this destination.
+          </p>
         </div>
-      )}
+      </div>
+
+      <div className="listing-container">
+        <Breadcrumbs />
+        <h2 className="activities-title">Explore Activities</h2>
+
+        {/* 🔍 Filters */}
+        <div className="filter-bar">
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+          >
+            <option value="">All Types</option>
+            {types.map((type, index) => (
+              <option key={index} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+          <input
+            type="number"
+            placeholder="Max Price (EGP)"
+            value={maxPriceFilter}
+            onChange={(e) => setMaxPriceFilter(e.target.value)}
+          />
+        </div>
+
+        {/* 🗂️ Grid of Cards */}
+        {loading ? (
+          <p>Loading...</p>
+        ) : filteredActivities.length === 0 ? (
+          <p>No activities found.</p>
+        ) : (
+          <div className="activities-grid">
+            {filteredActivities.map((item, index) => {
+              const priceFormatted = formatPrice(item.pricePerHour);
+
+              return (
+                <Link
+                  to={`/activities/${item.id}`}
+                  state={{
+                    name: item.name,
+                    basePrice: item.pricePerHour || 0,
+                    durationUnit: 15,
+                    durations: [15, 30, 45, 60],
+                    timeSlots: {
+                      morning: [
+                        "9:00 AM",
+                        "9:30 AM",
+                        "10:00 AM",
+                        "10:30 AM",
+                        "11:00 AM",
+                      ],
+                      afternoon: ["12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM"],
+                      evening: ["4:00 PM", "4:30 PM", "5:00 PM"],
+                    },
+                  }}
+                  key={index}
+                  className="activity-card"
+                >
+                  <img src={item.imageUrl} alt={item.name} />
+                  <div className="activity-card-content">
+                    <span className="activity-type badge">
+                      {item.activity_type?.trim() || "Activity"}
+                    </span>
+                    <h3>{item.name}</h3>
+                    <p className="activity-price">
+                      {priceFormatted !== null ? (
+                        <>
+                          From <strong>EGP {priceFormatted}/hour</strong>
+                        </>
+                      ) : (
+                        <>Not Available</>
+                      )}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
