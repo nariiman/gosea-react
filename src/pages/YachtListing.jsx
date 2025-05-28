@@ -38,12 +38,12 @@ const YachtListing = () => {
   }, [id]);
 
   const handleCardClick = (yacht) => {
-    navigate(`/yachts/${yacht.id}`, {
+    navigate(`/destinations/${id}/yachts/${yacht.id}`, {
       state: {
         id: yacht.id,
         name: yacht.name,
-        hourlyRate: yacht.pricePerHour,
-        dailyRate: yacht.pricePerHour ? yacht.pricePerHour * 8 : 0,
+        hourlyRate: parseInt(yacht.pricePerHour).toLocaleString(),
+        dailyRate: yacht.pricePerHour ? parseInt(yacht.pricePerHour) * 8 : 0,
         destinationId: yacht.destinationId ?? yacht.destination_id,
         mainImage: yacht.pics || "/assets/Shorely.png",
         gallery: [
@@ -134,7 +134,8 @@ const YachtListing = () => {
                       <>
                         From{" "}
                         <strong>
-                          EGP {formatPrice(item.pricePerHour)}/hour
+                          EGP {parseInt(item.pricePerHour).toLocaleString()}
+                          /hour
                         </strong>
                       </>
                     ) : (

@@ -6,6 +6,7 @@ import TransportationModal from "./TransportationModal";
 import { useAuth } from "../hooks/useAuth";
 import { useTransportation } from "../contexts/TransporationContext.jsx";
 import { useCatering } from "../contexts/CateringContext.jsx";
+import Breadcrumbs from "./Breadcrumbs.jsx";
 
 const YachtBookingForm = () => {
   const { state } = useLocation();
@@ -55,7 +56,9 @@ const YachtBookingForm = () => {
         if (e.key === "ArrowRight") {
           setActiveImgIndex((prev) => (prev + 1) % gallery.length);
         } else if (e.key === "ArrowLeft") {
-          setActiveImgIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
+          setActiveImgIndex(
+            (prev) => (prev - 1 + gallery.length) % gallery.length
+          );
         } else if (e.key === "Escape") {
           setActiveImgIndex(null);
         }
@@ -75,7 +78,9 @@ const YachtBookingForm = () => {
       fetch(`http://localhost:3000/activities?destinationId=${destinationId}`)
         .then((res) => res.json())
         .then((data) => {
-          setActivities(data.map((a) => ({ ...a, pricePerHour: Number(a.pricePerHour) })));
+          setActivities(
+            data.map((a) => ({ ...a, pricePerHour: Number(a.pricePerHour) }))
+          );
         })
         .catch(() => setActivitiesError("Failed to fetch activities."))
         .finally(() => setLoadingActivities(false));
@@ -112,10 +117,21 @@ const YachtBookingForm = () => {
       yachtPrice = diffDays * dailyRate * guestCount;
     }
 
-    const activitiesTotal = selectedActivities.reduce((acc, act) => acc + act.price, 0);
+    const activitiesTotal = selectedActivities.reduce(
+      (acc, act) => acc + act.price,
+      0
+    );
     const cateringTotal = cateringRequest?.total || 0;
     setPrice(yachtPrice + activitiesTotal + cateringTotal);
-  }, [bookingType, hours, startDate, endDate, guests, selectedActivities, cateringRequest]);
+  }, [
+    bookingType,
+    hours,
+    startDate,
+    endDate,
+    guests,
+    selectedActivities,
+    cateringRequest,
+  ]);
 
   const handleBooking = async () => {
     if (!user?.uid) return alert("Please sign in first");
@@ -149,8 +165,27 @@ const YachtBookingForm = () => {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      alert("✅ Booking successful!");
-      navigate("/confirmation", { state: { bookingId: data.bookingId } });
+
+      // 🔁 Redirect to checkout with full booking context
+      navigate("/checkout", {
+        state: {
+          bookingId: data.bookingId,
+          type: "yacht",
+          name,
+          price,
+          bookingType,
+          hourlyRate,
+          dailyRate,
+          guests: parseInt(guests),
+          startDate: bookingType === "hourly" ? hourlyDate : startDate,
+          endDate: bookingType === "overnight" ? endDate : null,
+          startTime,
+          selectedActivities,
+          catering: cateringRequest,
+          transportation: transportationRequest,
+          image: mainImage,
+        },
+      });
     } catch (err) {
       alert(err.message);
     }
@@ -174,6 +209,11 @@ const YachtBookingForm = () => {
         </div>
       </div>
 
+      {/* 🧭 Breadcrumbs */}
+      <div className="booking-breadcrumbs-wrapper">
+        <Breadcrumbs />
+      </div>
+
       {/* Gallery */}
       <div className="booking-gallery">
         {gallery.map((img, idx) => (
@@ -189,40 +229,74 @@ const YachtBookingForm = () => {
 
       {/* Lightbox */}
       {activeImgIndex !== null && (
-        <div className="lightbox-overlay" onClick={() => setActiveImgIndex(null)}>
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <button className="lightbox-close" onClick={() => setActiveImgIndex(null)}>×</button>
+        <div
+          className="lightbox-overlay"
+          onClick={() => setActiveImgIndex(null)}
+        >
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="lightbox-close"
+              onClick={() => setActiveImgIndex(null)}
+            >
+              ×
+            </button>
             <img src={gallery[activeImgIndex]} alt="Preview" />
             <button
               className="lightbox-prev"
               onClick={() =>
-                setActiveImgIndex((activeImgIndex - 1 + gallery.length) % gallery.length)
+                setActiveImgIndex(
+                  (activeImgIndex - 1 + gallery.length) % gallery.length
+                )
               }
-            >⟨</button>
+            >
+              ⟨
+            </button>
             <button
               className="lightbox-next"
               onClick={() =>
                 setActiveImgIndex((activeImgIndex + 1) % gallery.length)
               }
-            >⟩</button>
+            >
+              ⟩
+            </button>
           </div>
         </div>
       )}
 
       {/* Details Bubbles */}
       <section className="bubbles" style={{ marginBottom: "0" }}>
-        <div className="bubble-tag">💵 Hourly: EGP {hourlyRate}</div>
+        <div className="bubble-tag">
+          💵 Hourly: EGP {parseInt(hourlyRate).toLocaleString()}
+        </div>
         <div className="bubble-tag">🛏️ Beds: {beds}</div>
         <div className="bubble-tag">🧍 Guests: {guestCapacity}</div>
-        <div className="bubble-tag">📅 Daily: EGP {dailyRate}</div>
+        <div className="bubble-tag">
+          📅 Daily: EGP {parseInt(dailyRate).toLocaleString()}
+        </div>
       </section>
-      <p style={{ textAlign: "center", maxWidth: "800px", margin: "16px auto 24px", color: "#444", fontSize: "16px" }}>{mainDescription}</p>
+      <p
+        style={{
+          textAlign: "center",
+          maxWidth: "800px",
+          margin: "16px auto 24px",
+          color: "#444",
+          fontSize: "16px",
+        }}
+      >
+        {mainDescription}
+      </p>
 
       {/* Booking Form */}
       <div className="booking-content">
         <div className="booking-form">
           <label>Booking Type</label>
-          <select value={bookingType} onChange={(e) => setBookingType(e.target.value)}>
+          <select
+            value={bookingType}
+            onChange={(e) => setBookingType(e.target.value)}
+          >
             <option value="hourly">Hourly</option>
             <option value="overnight">Overnight Trip</option>
           </select>
@@ -230,19 +304,30 @@ const YachtBookingForm = () => {
           {bookingType === "hourly" && (
             <>
               <label>Booking Date</label>
-              <input type="date" value={hourlyDate} onChange={(e) => setHourlyDate(e.target.value)} />
+              <input
+                type="date"
+                value={hourlyDate}
+                onChange={(e) => setHourlyDate(e.target.value)}
+              />
               <label>Start Time</label>
-              <select value={startTime} onChange={(e) => setStartTime(e.target.value)}>
+              <select
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+              >
                 <option value="">Select Start Time</option>
                 {startTimes.map((time, index) => (
-                  <option key={index} value={time}>{time}</option>
+                  <option key={index} value={time}>
+                    {time}
+                  </option>
                 ))}
               </select>
               <label>Hours</label>
               <select value={hours} onChange={(e) => setHours(e.target.value)}>
                 <option value="">Select</option>
                 {[2, 4, 6, 8].map((h) => (
-                  <option key={h} value={h}>{h} hours</option>
+                  <option key={h} value={h}>
+                    {h} hours
+                  </option>
                 ))}
               </select>
             </>
@@ -251,15 +336,30 @@ const YachtBookingForm = () => {
           {bookingType === "overnight" && (
             <>
               <label>Start Date</label>
-              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
               <label>End Date</label>
-              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
               {dateError && <p className="error-message">{dateError}</p>}
             </>
           )}
 
           <label>Guests</label>
-          <input type="number" value={guests} onChange={(e) => setGuests(e.target.value)} min={1} max={50} placeholder="Number of guests" />
+          <input
+            type="number"
+            value={guests}
+            onChange={(e) => setGuests(e.target.value)}
+            min={1}
+            max={50}
+            placeholder="Number of guests"
+          />
 
           <label>Activities</label>
           {loadingActivities ? (
@@ -267,11 +367,19 @@ const YachtBookingForm = () => {
           ) : activitiesError ? (
             <p className="error-message">{activitiesError}</p>
           ) : (
-            <Select isMulti options={activityOptions} value={selectedActivities} onChange={(options) => setSelectedActivities(options || [])} />
+            <Select
+              isMulti
+              options={activityOptions}
+              value={selectedActivities}
+              onChange={(options) => setSelectedActivities(options || [])}
+            />
           )}
 
           <TransportationModal />
-          <CateringModal destinationId={destinationId} guests={parseInt(guests || 1)} />
+          <CateringModal
+            destinationId={destinationId}
+            guests={parseInt(guests || 1)}
+          />
 
           {price !== null && price > 0 && (
             <div className="activity-receipt">
@@ -280,27 +388,48 @@ const YachtBookingForm = () => {
                 <>
                   <ul>
                     {selectedActivities.map((a, i) => (
-                      <li key={i}>{a.name} — EGP {a.price}</li>
+                      <li key={i}>
+                        {a.name} — EGP {a.price}
+                      </li>
                     ))}
                   </ul>
-                  <p><strong>Activities Total:</strong> EGP {selectedActivities.reduce((acc, act) => acc + act.price, 0)}</p>
+                  <p>
+                    <strong>Activities Total:</strong> EGP{" "}
+                    {selectedActivities.reduce(
+                      (acc, act) => acc + act.price,
+                      0
+                    )}
+                  </p>
                 </>
               )}
               {cateringRequest && (
                 <>
                   <ul>
                     {cateringRequest.menus.map((m, i) => (
-                      <li key={i}>{m.name} — EGP {m.pricePerPerson} × {guests}</li>
+                      <li key={i}>
+                        {m.name} — EGP {m.pricePerPerson} × {guests}
+                      </li>
                     ))}
                   </ul>
-                  <p><strong>Catering Total:</strong> EGP {cateringRequest.total}</p>
+                  <p>
+                    <strong>Catering Total:</strong> EGP {cateringRequest.total}
+                  </p>
                 </>
               )}
-              <p className="price-display"><strong>Total Estimate:</strong> EGP {price}</p>
+              <p className="price-display">
+                <strong>Total Estimate:</strong> EGP{" "}
+                {parseInt(price).toLocaleString()}
+              </p>
             </div>
           )}
 
-          <button className="btn btn-primary" disabled={!price || price <= 0} onClick={handleBooking}>Reserve Yacht</button>
+          <button
+            className="btn btn-primary"
+            disabled={!price || price <= 0}
+            onClick={handleBooking}
+          >
+            Reserve Yacht
+          </button>
         </div>
       </div>
     </div>

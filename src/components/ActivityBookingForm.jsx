@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useTransportation } from "../contexts/TransporationContext.jsx";
 import TransportationModal from "./TransportationModal";
+import Breadcrumbs from "./Breadcrumbs.jsx";
 
 const ActivityBookingForm = () => {
   const { state } = useLocation();
   const { user } = useAuth();
   const { transportationRequest } = useTransportation();
+  const navigate = useNavigate();
 
   const {
     name = "Activity",
@@ -105,7 +107,22 @@ const ActivityBookingForm = () => {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      alert("✅ Booking successful!");
+
+      // ✅ Redirect to checkout with booking data
+      navigate("/checkout", {
+        state: {
+          bookingId: data.bookingId,
+          type: "activity",
+          name,
+          price,
+          duration,
+          riders,
+          date,
+          time: selectedTime,
+          transportation: transportationRequest,
+          image: mainImage,
+        },
+      });
     } catch (err) {
       alert(err.message);
     }
@@ -119,6 +136,11 @@ const ActivityBookingForm = () => {
         <div className="booking-header-overlay">
           <h1>{name}</h1>
         </div>
+      </div>
+
+      {/* 🧭 Breadcrumbs */}
+      <div className="booking-breadcrumbs-wrapper">
+        <Breadcrumbs />
       </div>
 
       {/* Gallery */}
@@ -175,9 +197,14 @@ const ActivityBookingForm = () => {
 
       {/* Bubble-Styled Info Section */}
       <section className="bubbles" style={{ marginBottom: "0" }}>
-        <div className="bubble-tag">💰 Price: EGP {basePrice} / {durationUnit} min</div>
-        <div className="bubble-tag">🕒 Durations: {durations.join(", ")} mins</div>
-        <div className="bubble-tag">🖼️ Gallery: {gallery.length} images</div>
+        <div className="bubble-tag">
+          💰 Price: EGP {parseInt(basePrice).toLocaleString()} / {durationUnit}{" "}
+          min
+        </div>
+        <div className="bubble-tag">
+          🕒 Durations: {durations.join(", ")} mins
+        </div>
+        <div className="bubble-tag">👶 Min Age: {16}</div>
       </section>
       <p
         style={{
@@ -189,7 +216,8 @@ const ActivityBookingForm = () => {
           lineHeight: 1.6,
         }}
       >
-        {mainDescription || "Enjoy an unforgettable adventure with this activity. Perfect for thrill-seekers and leisure lovers alike!"}
+        {mainDescription ||
+          "Enjoy an unforgettable adventure with this activity. Perfect for thrill-seekers and leisure lovers alike!"}
       </p>
 
       {/* Callout CTA */}
@@ -271,7 +299,8 @@ const ActivityBookingForm = () => {
 
             {price !== null && (
               <p className="price-display">
-                Estimated Price: <strong>EGP {price}</strong>
+                Estimated Price:{" "}
+                <strong>EGP {parseInt(price).toLocaleString()}</strong>
               </p>
             )}
 

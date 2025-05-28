@@ -61,7 +61,7 @@ const MyBookings = () => {
             </p>
             <p>
               <strong>Total Price:</strong> EGP{" "}
-              {parseFloat(b.bookingPrice).toFixed(2)}
+              {parseInt(b.bookingPrice).toLocaleString()}
             </p>
             <p>
               <strong>Status:</strong>{" "}

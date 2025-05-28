@@ -1,72 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import Breadcrumbs from "../components/Breadcrumbs";
+
+const fetchActivities = async (destinationId) => {
+  const res = await fetch(
+    `http://localhost:3000/activities/destination/${destinationId}`
+  );
+  const data = await res.json();
+  return data.map((activity) => ({
+    ...activity,
+    pricePerHour: activity.pricePerHour ?? null,
+    imageUrl: activity.pics ? `${activity.pics}` : "/assets/Shorely.png",
+  }));
+};
+
+const fetchTypes = async (destinationId) => {
+  const res = await fetch(
+    `http://localhost:3000/activities/types/${destinationId}`
+  );
+  return res.json();
+};
 
 const ActivityListing = () => {
   const { id } = useParams();
-  const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [typeFilter, setTypeFilter] = useState("");
   const [maxPriceFilter, setMaxPriceFilter] = useState("");
-  const [types, setTypes] = useState([]);
 
-  useEffect(() => {
-    const fetchActivities = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:3000/activities/destination/${id}`
-        );
-        const data = await res.json();
+  const {
+    data: activities = [],
+    isLoading: loadingActivities,
+    isError: errorActivities,
+  } = useQuery({
+    queryKey: ["activities", id],
+    queryFn: () => fetchActivities(id),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    staleTime: Infinity,
+  });
 
-        if (Array.isArray(data)) {
-          const formattedData = data.map((activity) => ({
-            ...activity,
-            pricePerHour: activity.pricePerHour ?? null,
-            imageUrl: activity.pics
-              ? `${activity.pics}`
-              : "/assets/Shorely.png",
-          }));
-          setActivities(formattedData);
-        } else {
-          console.error("Response is not an array:", data);
-          setActivities([]);
-        }
-      } catch (err) {
-        console.error("Failed to fetch activities:", err);
-        setActivities([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const {
+    data: types = [],
+    isLoading: loadingTypes,
+    isError: errorTypes,
+  } = useQuery({
+    queryKey: ["types", id],
+    queryFn: () => fetchTypes(id),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    staleTime: Infinity,
+  });
 
-    const fetchTypes = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/activities/types/${id}`);
-        const data = await res.json();
-        setTypes(data);
-      } catch (err) {
-        console.error("Failed to fetch types:", err);
-        setTypes([]);
-      }
-    };
-
-    fetchActivities();
-    fetchTypes();
-  }, [id]);
-
-  const formatPrice = (price) => {
-    if (price === null || price === undefined) return null;
-    return price % 1 === 0 ? price.toFixed(0) : price.toFixed(2);
-  };
-
-  const filteredActivities = activities.filter((activity) => {
-    const normalizedType = (activity.activity_type || "").trim().toLowerCase();
-    const normalizedFilter = typeFilter.trim().toLowerCase();
-
-    const matchesType = typeFilter ? normalizedType === normalizedFilter : true;
-    const matchesPrice = maxPriceFilter
-      ? activity.pricePerHour <= parseFloat(maxPriceFilter)
+  const filteredActivities = activities.filter((item) => {
+    const matchesType = typeFilter
+      ? item.activityType?.toLowerCase() === typeFilter.toLowerCase()
       : true;
+
+    const matchesPrice = maxPriceFilter
+      ? item.pricePerHour <= parseFloat(maxPriceFilter)
+      : true;
+
     return matchesType && matchesPrice;
   });
 
@@ -112,18 +105,22 @@ const ActivityListing = () => {
         </div>
 
         {/* 🗂️ Grid of Cards */}
-        {loading ? (
+        {loadingActivities || loadingTypes ? (
           <p>Loading...</p>
+        ) : errorActivities || errorTypes ? (
+          <p>Error loading activities or types.</p>
         ) : filteredActivities.length === 0 ? (
           <p>No activities found.</p>
         ) : (
           <div className="activities-grid">
             {filteredActivities.map((item, index) => {
-              const priceFormatted = formatPrice(item.pricePerHour);
+              const priceFormatted = parseInt(
+                item.pricePerHour
+              ).toLocaleString();
 
               return (
                 <Link
-                  to={`/activities/${item.id}`}
+                  to={`/destinations/${id}/activities/${item.id}`}
                   state={{
                     name: item.name,
                     basePrice: item.pricePerHour || 0,
@@ -147,8 +144,10 @@ const ActivityListing = () => {
                   <img src={item.imageUrl} alt={item.name} />
                   <div className="activity-card-content">
                     <span className="activity-type badge">
-                      {item.activity_type?.trim() || "Activity"}
+                      {item.activityType?.trim().charAt(0).toUpperCase() +
+                        item.activityType?.trim().slice(1) || "Activity"}
                     </span>
+
                     <h3>{item.name}</h3>
                     <p className="activity-price">
                       {priceFormatted !== null ? (

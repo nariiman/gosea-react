@@ -23,11 +23,9 @@ function Header() {
     <header className="main-header">
       <div className="container header-content">
         {/* Logo */}
-        <div>
-          <Link to="/">
-            <img className="logo" src="/assets/logo.png" alt="Shorely" />
-          </Link>
-        </div>
+        <Link to="/" className="logo-wrap">
+          <img className="logo" src="/assets/logo.png" alt="Shorely" />
+        </Link>
 
         {/* Navigation */}
         <nav className="nav-links">
@@ -52,7 +50,7 @@ function Header() {
           </ul>
         </nav>
 
-        {/* Auth Buttons */}
+        {/* Auth */}
         <div className="auth-buttons">
           {user ? (
             <>

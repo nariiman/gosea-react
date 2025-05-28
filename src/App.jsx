@@ -3,20 +3,17 @@ import Layout from "./components/Layout";
 import GoToTop from "./components/GoToTop.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import Home from "./pages/Home.jsx";
 import Kayaking from "./pages/Kayaking.jsx";
 import LuxYacht from "./pages/LuxYacht.jsx";
 import TransportationPage from "./pages/Transportation";
 import Catering from "./components/Catering";
-import Checkout from "./pages/Checkout.jsx";
 import ActivityListing from "./pages/ActivityListing";
 import YachtListing from "./pages/YachtListing";
 import YachtBookingForm from "./components/YachtBookingForm";
 import ActivityBookingForm from "./components/ActivityBookingForm";
 import DestinationPage from "./pages/DestinationPage";
 import Payment from "./pages/Payment.jsx";
-import Confirmation from "./pages/Confirmation.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import SignIn from "./pages/SignIn";
 import Services from "./pages/Services.jsx";
@@ -24,6 +21,8 @@ import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import MyBookings from "./pages/MyBookings.jsx";
 import BookingDetail from "./pages/BookingDetails.jsx";
+import CheckoutPage from "./pages/CheckoutPage.js";
+import ConfirmationPage from "./pages/ConfirmationPage.jsx";
 
 function AppRoutes() {
   return (
@@ -39,11 +38,15 @@ function AppRoutes() {
       <Route path="/luxury-yacht" element={<LuxYacht />} />
       <Route path="/transportation" element={<TransportationPage />} />
       <Route path="/catering/:id" element={<Catering />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/yachts/:id" element={<YachtBookingForm />} />
-      <Route path="/activities/:id" element={<ActivityBookingForm />} />
+      <Route
+        path="/destinations/:id/yachts/:id"
+        element={<YachtBookingForm />}
+      />
+      <Route
+        path="/destinations/:id/activities/:id"
+        element={<ActivityBookingForm />}
+      />
       <Route path="/payment" element={<Payment />} />
-      <Route path="/confirmation" element={<Confirmation />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/about" element={<About />} />
@@ -51,6 +54,8 @@ function AppRoutes() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/bookings" element={<MyBookings />} />
       <Route path="/bookings/:id" element={<BookingDetail />} />
+      <Route path="/confirmation" element={<ConfirmationPage />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
     </Routes>
   );
 }

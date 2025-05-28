@@ -58,7 +58,9 @@ const BookingDetail = () => {
         <strong>Guests:</strong> {numberOfPeople}
       </p>
       <p>
-        <strong>Total Price:</strong> EGP {parseFloat(bookingPrice).toFixed(2)}
+        <strong>Total Price:</strong> EGP{" "}
+        {parseInt(bookingPrice).toLocaleString()}
+        .00
       </p>
 
       {yacht && (
@@ -68,10 +70,10 @@ const BookingDetail = () => {
             <strong>Name:</strong> {yacht.name}
           </p>
           <p>
-            <strong>Hourly:</strong> EGP {yacht.hourlyRate}
+            <strong>Hourly:</strong> EGP {yacht.hourlyRate.toLocaleString()}
           </p>
           <p>
-            <strong>Daily:</strong> EGP {yacht.dailyRate}
+            <strong>Daily:</strong> EGP {yacht.dailyRate.toLocaleString()}
           </p>
         </div>
       )}
