@@ -16,7 +16,7 @@ const YachtBookingForm = () => {
   const { cateringRequest } = useCatering();
 
   const {
-    name = "",
+    name = "Yacht",
     hourlyRate = 0,
     dailyRate = 0,
     startTimes = [],
@@ -26,11 +26,10 @@ const YachtBookingForm = () => {
     beds = state?.beds,
     mainDescription = "",
     gallery = [
-      "/assets/kay.jpg",
-      "/assets/kaya.jpg",
-      "/assets/kayaking.jpg",
-      "/assets/Kayaking.png",
-      "/assets/JetSki.png",
+      "/assets/yachtgal.png",
+      "/assets/yachtgall.png",
+      "/assets/yachtgaller.png",
+      "/assets/yachtgallery.png",
     ],
     id,
   } = state || {};
@@ -44,10 +43,6 @@ const YachtBookingForm = () => {
   const [guests, setGuests] = useState("");
   const [price, setPrice] = useState(null);
   const [dateError, setDateError] = useState("");
-  const [activities, setActivities] = useState([]);
-  const [selectedActivities, setSelectedActivities] = useState([]);
-  const [loadingActivities, setLoadingActivities] = useState(false);
-  const [activitiesError, setActivitiesError] = useState("");
   const [activeImgIndex, setActiveImgIndex] = useState(null);
 
   const handleKeyDown = useCallback(
@@ -73,19 +68,15 @@ const YachtBookingForm = () => {
   }, [handleKeyDown]);
 
   useEffect(() => {
-    if (destinationId) {
-      setLoadingActivities(true);
-      fetch(`http://localhost:3000/activities?destinationId=${destinationId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setActivities(
-            data.map((a) => ({ ...a, pricePerHour: Number(a.pricePerHour) }))
-          );
-        })
-        .catch(() => setActivitiesError("Failed to fetch activities."))
-        .finally(() => setLoadingActivities(false));
+    if (activeImgIndex !== null) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
     }
-  }, [destinationId]);
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [activeImgIndex]);
 
   useEffect(() => {
     setDateError("");
@@ -117,21 +108,9 @@ const YachtBookingForm = () => {
       yachtPrice = diffDays * dailyRate * guestCount;
     }
 
-    const activitiesTotal = selectedActivities.reduce(
-      (acc, act) => acc + act.price,
-      0
-    );
     const cateringTotal = cateringRequest?.total || 0;
-    setPrice(yachtPrice + activitiesTotal + cateringTotal);
-  }, [
-    bookingType,
-    hours,
-    startDate,
-    endDate,
-    guests,
-    selectedActivities,
-    cateringRequest,
-  ]);
+    setPrice(yachtPrice + cateringTotal);
+  }, [bookingType, hours, startDate, endDate, guests, cateringRequest]);
 
   const handleBooking = async () => {
     if (!user?.uid) return alert("Please sign in first");
@@ -145,8 +124,6 @@ const YachtBookingForm = () => {
       bookingPrice: price.toFixed(2),
       userUid: user.uid,
       yachtId: id,
-      activities: selectedActivities.map((a) => a.id),
-      transportationRequest: transportationRequest || undefined,
       catering: cateringRequest
         ? {
             menus: cateringRequest.menus.map((m) => m.id),
@@ -154,6 +131,7 @@ const YachtBookingForm = () => {
             total: cateringRequest.total,
           }
         : undefined,
+      transportationRequest: transportationRequest || undefined,
     };
 
     try {
@@ -166,7 +144,6 @@ const YachtBookingForm = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
 
-      // 🔁 Redirect to checkout with full booking context
       navigate("/checkout", {
         state: {
           bookingId: data.bookingId,
@@ -174,13 +151,10 @@ const YachtBookingForm = () => {
           name,
           price,
           bookingType,
-          hourlyRate,
-          dailyRate,
           guests: parseInt(guests),
           startDate: bookingType === "hourly" ? hourlyDate : startDate,
           endDate: bookingType === "overnight" ? endDate : null,
           startTime,
-          selectedActivities,
           catering: cateringRequest,
           transportation: transportationRequest,
           image: mainImage,
@@ -191,30 +165,21 @@ const YachtBookingForm = () => {
     }
   };
 
-  const activityOptions = activities.map((a) => ({
-    value: a.id,
-    label: `${a.name} (EGP ${a.pricePerHour})`,
-    id: a.id,
-    name: a.name,
-    price: a.pricePerHour,
-  }));
-
   return (
     <div className="booking-container">
-      {/* Hero */}
-      <div className="booking-header">
-        <img src={mainImage} alt={name} className="booking-header-img" />
-        <div className="booking-header-overlay">
+      <div className="activities-hero">
+        <video autoPlay muted loop playsInline className="hero-video">
+          <source src="/assets/yachthero.mp4" type="video/mp4" />
+        </video>
+        <div className="overlay">
           <h1>{name}</h1>
         </div>
       </div>
 
-      {/* 🧭 Breadcrumbs */}
       <div className="booking-breadcrumbs-wrapper">
         <Breadcrumbs />
       </div>
 
-      {/* Gallery */}
       <div className="booking-gallery">
         {gallery.map((img, idx) => (
           <img
@@ -227,7 +192,6 @@ const YachtBookingForm = () => {
         ))}
       </div>
 
-      {/* Lightbox */}
       {activeImgIndex !== null && (
         <div
           className="lightbox-overlay"
@@ -266,7 +230,6 @@ const YachtBookingForm = () => {
         </div>
       )}
 
-      {/* Details Bubbles */}
       <section className="bubbles" style={{ marginBottom: "0" }}>
         <div className="bubble-tag">
           💵 Hourly: EGP {parseInt(hourlyRate).toLocaleString()}
@@ -277,6 +240,7 @@ const YachtBookingForm = () => {
           📅 Daily: EGP {parseInt(dailyRate).toLocaleString()}
         </div>
       </section>
+
       <p
         style={{
           textAlign: "center",
@@ -284,12 +248,12 @@ const YachtBookingForm = () => {
           margin: "16px auto 24px",
           color: "#444",
           fontSize: "16px",
+          lineHeight: 1.6,
         }}
       >
         {mainDescription}
       </p>
 
-      {/* Booking Form */}
       <div className="booking-content">
         <div className="booking-form">
           <label>Booking Type</label>
@@ -298,12 +262,12 @@ const YachtBookingForm = () => {
             onChange={(e) => setBookingType(e.target.value)}
           >
             <option value="hourly">Hourly</option>
-            <option value="overnight">Overnight Trip</option>
+            <option value="overnight">Overnight</option>
           </select>
 
           {bookingType === "hourly" && (
             <>
-              <label>Booking Date</label>
+              <label>Date</label>
               <input
                 type="date"
                 value={hourlyDate}
@@ -361,77 +325,55 @@ const YachtBookingForm = () => {
             placeholder="Number of guests"
           />
 
-          <label>Activities</label>
-          {loadingActivities ? (
-            <p>Loading...</p>
-          ) : activitiesError ? (
-            <p className="error-message">{activitiesError}</p>
-          ) : (
-            <Select
-              isMulti
-              options={activityOptions}
-              value={selectedActivities}
-              onChange={(options) => setSelectedActivities(options || [])}
-            />
-          )}
-
           <TransportationModal />
           <CateringModal
             destinationId={destinationId}
             guests={parseInt(guests || 1)}
           />
 
-          {price !== null && price > 0 && (
-            <div className="activity-receipt">
-              <h4>Summary</h4>
-              {selectedActivities.length > 0 && (
-                <>
-                  <ul>
-                    {selectedActivities.map((a, i) => (
-                      <li key={i}>
-                        {a.name} — EGP {a.price}
-                      </li>
-                    ))}
-                  </ul>
-                  <p>
-                    <strong>Activities Total:</strong> EGP{" "}
-                    {selectedActivities.reduce(
-                      (acc, act) => acc + act.price,
-                      0
-                    )}
-                  </p>
-                </>
-              )}
-              {cateringRequest && (
-                <>
-                  <ul>
-                    {cateringRequest.menus.map((m, i) => (
-                      <li key={i}>
-                        {m.name} — EGP {m.pricePerPerson} × {guests}
-                      </li>
-                    ))}
-                  </ul>
-                  <p>
-                    <strong>Catering Total:</strong> EGP {cateringRequest.total}
-                  </p>
-                </>
-              )}
-              <p className="price-display">
-                <strong>Total Estimate:</strong> EGP{" "}
-                {parseInt(price).toLocaleString()}
-              </p>
-            </div>
+          {price !== null && (
+            <p className="price-display">
+              Estimated Price:{" "}
+              <strong>EGP {parseInt(price).toLocaleString()}</strong>
+            </p>
           )}
 
-          <button
-            className="btn btn-primary"
-            disabled={!price || price <= 0}
-            onClick={handleBooking}
-          >
-            Reserve Yacht
+          <button className="btn btn-primary" onClick={handleBooking}>
+            Book Now
           </button>
         </div>
       </div>
+
+      <section className="booking-extras-card">
+        <details>
+          <summary>📄 Cancellation Policy</summary>
+          <p>
+            Cancellations up to 24 hours before the activity will be fully
+            refunded. No refunds for same-day cancellations.
+          </p>
+        </details>
+        <details>
+          <summary>🦺 Safety & Regulations</summary>
+          <p>
+            All guests must follow provided safety instructions. Participation
+            under the influence of alcohol or drugs is strictly prohibited.
+          </p>
+        </details>
+        <details>
+          <summary>❓ FAQs</summary>
+          <p>
+            <strong>Q: Can children participate?</strong>
+            <br />
+            A: Yes, children above 10 years old can join with adult supervision.
+          </p>
+          <p>
+            <strong>Q: Is equipment provided?</strong>
+            <br />
+            A: Yes, all necessary safety and navigation gear is included in the
+            price.
+          </p>
+        </details>
+      </section>
     </div>
   );
 };

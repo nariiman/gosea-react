@@ -23,7 +23,6 @@ const ActivityBookingForm = () => {
       "/assets/kaya.jpg",
       "/assets/kayaking.jpg",
       "/assets/Kayaking.png",
-      "/assets/JetSki.png",
     ],
     id: activityId,
     mainDescription = "",
@@ -130,13 +129,18 @@ const ActivityBookingForm = () => {
 
   return (
     <div className="booking-container">
-      {/* Hero */}
-      <div className="booking-header">
-        <img src={mainImage} alt={name} className="booking-header-img" />
-        <div className="booking-header-overlay">
-          <h1>{name}</h1>
+      <>
+        {/* ✅ FULL-WIDTH HERO */}
+        <div className="activities-hero">
+          <video autoPlay muted loop playsInline className="hero-video">
+            <source src="/assets/Kayaking.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="overlay">
+            <h1>{name}</h1>
+          </div>
         </div>
-      </div>
+      </>
 
       {/* 🧭 Breadcrumbs */}
       <div className="booking-breadcrumbs-wrapper">
@@ -195,17 +199,25 @@ const ActivityBookingForm = () => {
         </div>
       )}
 
-      {/* Bubble-Styled Info Section */}
       <section className="bubbles" style={{ marginBottom: "0" }}>
-        <div className="bubble-tag">
-          💰 Price: EGP {parseInt(basePrice).toLocaleString()} / {durationUnit}{" "}
-          min
-        </div>
-        <div className="bubble-tag">
-          🕒 Durations: {durations.join(", ")} mins
-        </div>
-        <div className="bubble-tag">👶 Min Age: {16}</div>
+        {basePrice && durationUnit && (
+          <div className="bubble-tag">
+            💰 Price: EGP {parseInt(basePrice).toLocaleString()} /{" "}
+            {durationUnit} min
+          </div>
+        )}
+
+        {Array.isArray(durations) && durations.length > 0 && (
+          <div className="bubble-tag">
+            🕒 Durations: {durations.join(", ")} mins
+          </div>
+        )}
+
+        {state?.minAge && (
+          <div className="bubble-tag">👶 Min Age: {state.minAge}</div>
+        )}
       </section>
+
       <p
         style={{
           textAlign: "center",

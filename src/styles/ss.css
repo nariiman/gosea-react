@@ -24,39 +24,6 @@ h5 {
   font-size: 20px;
   margin: 10px;
 }
-/* ===================== */
-/* ✅ Header             */
-/* ===================== */
-/* .mainHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .mainHeader nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-  }
-  
-  .mainHeader nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  .mainHeader nav ul li a:hover {
-    color: blue;
-  } */
 
 .main-header {
   background-color: #fff;
@@ -697,7 +664,9 @@ hr {
 /* /////booking form/// */
 
 .booking-container {
-  max-width: 900px;
+  width: 100%;
+  max-width: 1350px;
+  padding: 0 20px;
   margin: 40px auto;
 }
 
@@ -2173,12 +2142,19 @@ textarea {
   outline: none;
 }
 
-/* activitiesheroo */
 .activities-hero {
-  width: 100%;
+  width: 100vw; /* Full viewport width */
+  position: relative;
   height: 60vh;
+  margin: 0 auto;
+  padding: 0;
   overflow: hidden;
-  margin-bottom: 30px;
+  left: 50%;
+  right: 50%;
+  transform: translateX(-50%);
+  border-radius: 0 !important;
+  max-width: none !important;
+  z-index: 1;
 }
 
 .hero-video {
