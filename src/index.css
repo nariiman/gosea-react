@@ -922,7 +922,7 @@ nav ul a {
   font-weight: 500;
 }
 
-.avatar.fallback {
+/* .avatar.fallback {
   background-color: #007aff;
   color: white;
   display: flex;
@@ -930,7 +930,7 @@ nav ul a {
   justify-content: center;
   font-weight: 600;
   font-size: 0.9rem;
-}
+} */
 
 .transportation-modal-overlay {
   position: fixed;
@@ -1197,4 +1197,139 @@ nav ul a {
   max-width: 1200px;
   margin: 16px auto;
   padding: 0 24px;
+}
+
+/* ===================== */
+/* ✅ Catering Modal Styles */
+/* ===================== */
+
+.catering-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.menu-card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.menu-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.menu-card.selected {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.menu-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.menu-card h3 {
+  font-size: 18px;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.menu-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.transportation-modal-content textarea {
+  width: 100%;
+  min-height: 80px;
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+.transportation-modal-content label {
+  font-weight: 500;
+  font-size: 14px;
+  display: block;
+  margin-top: var(--space-md);
+  color: var(--text-primary);
+}
+
+.submit-btn {
+  margin-top: var(--space-lg);
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+}
+
+.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #005ecb;
+}
+
+.transportation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.transportation-form label {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.transportation-form input,
+.transportation-form select,
+.transportation-form textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  width: 100%;
+  background-color: #f9f9f9;
+}
+
+.transportation-form input:focus,
+.transportation-form select:focus,
+.transportation-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: #fff;
+}
+
+.error-message {
+  color: #d9534f;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: -10px;
 }

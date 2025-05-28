@@ -60,6 +60,7 @@ const CateringModal = ({ destinationId, guests = 1 }) => {
 
   return (
     <>
+      {/* Checkbox */}
       <div className="transportation-section">
         <label className="transportation-label">
           <input
@@ -71,6 +72,7 @@ const CateringModal = ({ destinationId, guests = 1 }) => {
         </label>
       </div>
 
+      {/* Button */}
       <div className="transportation-button-wrapper">
         <button
           className="transportation-btn"
@@ -81,6 +83,7 @@ const CateringModal = ({ destinationId, guests = 1 }) => {
         </button>
       </div>
 
+      {/* Modal */}
       {showModal && (
         <div
           className="transportation-modal-overlay"

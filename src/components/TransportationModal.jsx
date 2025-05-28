@@ -56,6 +56,7 @@ const TransportationModal = () => {
 
   return (
     <>
+      {/* Toggle Checkbox */}
       <div className="transportation-section">
         <label className="transportation-label">
           <input
@@ -67,6 +68,7 @@ const TransportationModal = () => {
         </label>
       </div>
 
+      {/* Button */}
       <div className="transportation-button-wrapper">
         <button
           className="transportation-btn"
@@ -77,6 +79,7 @@ const TransportationModal = () => {
         </button>
       </div>
 
+      {/* Modal */}
       {showModal && (
         <div
           className="transportation-modal-overlay"
@@ -89,25 +92,29 @@ const TransportationModal = () => {
             <button className="close-btn" onClick={() => setShowModal(false)}>
               ×
             </button>
+
             <h2>Transportation Request</h2>
+
             <form className="transportation-form" onSubmit={handleSubmit}>
               <label>
                 Pickup Location:
                 <input
+                  type="text"
                   value={pickup}
                   onChange={(e) => setPickup(e.target.value)}
                   required
-                  placeholder="Hotel / Road Name"
+                  placeholder="Hotel or Road Name"
                 />
               </label>
 
               <label>
                 Drop-off Location:
                 <input
+                  type="text"
                   value={dropoff}
                   onChange={(e) => setDropoff(e.target.value)}
                   required
-                  placeholder="Destination / Landmark"
+                  placeholder="Destination or Landmark"
                 />
               </label>
 
